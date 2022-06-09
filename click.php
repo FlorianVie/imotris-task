@@ -17,7 +17,7 @@
 </head>
 
 <script>
-    function addIngr(ingr) {
+    /*     function addIngr(ingr) {
         var c = $('#' + ingr).text();
         $('#' + ingr).text(parseInt(c) + 1);
     }
@@ -26,6 +26,10 @@
         var c = $('#' + ingr).text();
         $('#' + ingr).text(parseInt(c) - 1);
     }
+
+    function getIngr(ingr) {
+        return $('#' + ingr).text();
+    } */
 </script>
 
 <body>
@@ -45,7 +49,33 @@
         type: jsPsychHtmlButtonResponse,
         stimulus: `<?php include 'burgers.php'; ?>`,
         choices: ['Suivant'],
-        prompt: "<p></p>"
+        prompt: "<p></p>",
+        data: {
+            salade: 0,
+            tomate: 0,
+            fromage: 0,
+            viande: 0,
+            oignon: 0
+        },
+        on_load: function(data) {
+
+            $("#saladePlus").click(function(data) {
+                var c = $('#saladeC').text();
+                $('#saladeC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+            });
+
+            $("#saladeMoins").click(function() {
+                var c = $('#saladeC').text();
+                $('#saladeC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+            });
+
+        },
+        on_finish: function(data) {
+            data.stimulus = "5 ingredients"
+        }
+
     };
 
     sequence.push(click_trial);
