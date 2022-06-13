@@ -59,6 +59,8 @@
         },
         on_load: function(data) {
 
+            // Compteur Salade
+
             $("#saladePlus").click(function(data) {
                 var c = $('#saladeC').text();
                 $('#saladeC').text(parseInt(c) + 1);
@@ -70,6 +72,63 @@
                 $('#saladeC').text(parseInt(c) - 1);
                 jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
             });
+
+            // Compteur Fromage
+
+            $("#fromageMoins").click(function() {
+                var c = $('#fromageC').text();
+                $('#fromageC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+            });
+
+            $("#fromagePlus").click(function() {
+                var c = $('#fromageC').text();
+                $('#fromageC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+            });
+
+            // Compteur Oignon
+
+            $("#oignonMoins").click(function() {
+                var c = $('#oignonC').text();
+                $('#oignonC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+            });
+
+            $("#oignonPlus").click(function() {
+                var c = $('#oignonC').text();
+                $('#oignonC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+            });
+
+            // Compteur Tomate
+
+            $("#tomateMoins").click(function() {
+                var c = $('#tomateC').text();
+                $('#tomateC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+            });
+
+            $("#tomatePlus").click(function() {
+                var c = $('#tomateC').text();
+                $('#tomateC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+            });
+
+            // Compteur Viande
+
+            $("#viandeMoins").click(function() {
+                var c = $('#viandeC').text();
+                $('#viandeC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+            });
+
+            $("#viandePlus").click(function() {
+                var c = $('#viandeC').text();
+                $('#viandeC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+            });
+
 
         },
         on_finish: function(data) {

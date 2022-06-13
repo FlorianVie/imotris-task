@@ -8,13 +8,13 @@
         </div>
         <footer class="card-footer">
             <p class="card-footer-item">
-                <button class="button" onclick="remIngr('tomateC')">-</button>
+                <button class="button" id="tomateMoins">-</button>
             </p>
             <p class="card-footer-item">
                 <span id="tomateC" class="has-text-weight-bold is-family-monospace">0</span>
             </p>
             <p class="card-footer-item">
-                <button class="button" onclick="addIngr('tomateC')">+</button>
+                <button class="button" id="tomatePlus">+</button>
             </p>
         </footer>
     </div>

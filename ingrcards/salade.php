@@ -8,13 +8,13 @@
         </div>
         <footer class="card-footer">
             <p class="card-footer-item">
-                <button id="saladeMoins" class="button" onclick="">-</button>
+                <button id="saladeMoins" class="button">-</button>
             </p>
             <p class="card-footer-item">
                 <span id="saladeC" class="has-text-weight-bold is-family-monospace">0</span>
             </p>
             <p class="card-footer-item">
-                <button id="saladePlus" class="button" onclick="">+</button>
+                <button id="saladePlus" class="button">+</button>
             </p>
         </footer>
     </div>
