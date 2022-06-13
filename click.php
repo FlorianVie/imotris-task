@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=1024, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Click Imotris</title>
 
@@ -11,8 +11,9 @@
     <script src="jspsych/jspsych.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
 
-    <link rel="stylesheet" href="css/bulma.css">
+    
     <link rel="stylesheet" href="jspsych/jspsych.css">
+    <link rel="stylesheet" href="css/bulma.css">
 
 </head>
 
@@ -57,6 +58,7 @@
             viande: 0,
             oignon: 0
         },
+        // Changement de valeur dans Data inialisé au chargement
         on_load: function(data) {
 
             // Compteur Salade

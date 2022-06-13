@@ -1,10 +1,25 @@
 <div class="container mb-5">
     <div class="columns is-centered">
+    <div class="column is-4">
+            <div class="card">
+                <div class="card-content">
+                    <div class="content">
+                        <h2 class="title is-5">Score</h2>
+                        <p>Commandes réalisées : 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="column is-8">
             <div class="card">
                 <div class="card-content">
                     <div class="content">
-                        Commande
+                    <h2 class="title is-5">Commande</h2>
+                    <p>Salade : 0</p>
+                    <p>Tomate : 0</p>
+                    <p>Oignon : 0</p>
+                    <p>Viande : 0</p>
+                    <p>Fromage : 0</p>
                     </div>
                 </div>
             </div>
@@ -13,7 +28,13 @@
 
     <div class="columns is-centered mt-5 mb-4">
         <div class="col has-text-centered">
-            <h1 class="title">Vos ingrédients</h1>
+        <div class="card">
+                <div class="card-content">
+                    <div class="content">
+                    <p class="title is-4">Vos ingrédients</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
