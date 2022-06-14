@@ -1,21 +1,15 @@
-<div class="column is-narrow">
+<div class="col">
     <div class="card">
-        <div class="card-content">
-            <div class="content has-text-centered">
+        <div class="card-header">Oignon</div>
+        <div class="card-body">
                 <img src="ingr/oignon.png" alt="" width="50px">
-                <p>Oignon</p>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group font-monospace" role="group" aria-label="Basic example">
+                <button id="oignonMoins" type="button" class="btn btn-secondary">-</button>
+                <button id="oignonC" type="button" class="btn">0</button>
+                <button id="oignonPlus" type="button" class="btn btn-secondary">+</button>
             </div>
         </div>
-        <footer class="card-footer">
-            <p class="card-footer-item">
-                <button class="button" id="oignonMoins">-</button>
-            </p>
-            <p class="card-footer-item">
-                <span id="oignonC" class="has-text-weight-bold is-family-monospace">0</span>
-            </p>
-            <p class="card-footer-item">
-                <button class="button" id="oignonPlus">+</button>
-            </p>
-        </footer>
     </div>
 </div>

@@ -1,21 +1,15 @@
-<div class="column is-narrow">
+<div class="col">
     <div class="card">
-        <div class="card-content">
-            <div class="content has-text-centered">
-                <img src="ingr/tomate.png" alt="" width="50px">
-                <p>Tomate</p>
+        <div class="card-header">Tomate</div>
+        <div class="card-body">
+            <img src="ingr/tomate.png" alt="" width="50px">
+        </div>
+        <div class="card-footer">
+            <div class="btn-group font-monospace" role="group" aria-label="Basic example">
+                <button id="tomateMoins" type="button" class="btn btn-secondary">-</button>
+                <button id="tomateC" type="button" class="btn">0</button>
+                <button id="tomatePlus" type="button" class="btn btn-secondary">+</button>
             </div>
         </div>
-        <footer class="card-footer">
-            <p class="card-footer-item">
-                <button class="button" id="tomateMoins">-</button>
-            </p>
-            <p class="card-footer-item">
-                <span id="tomateC" class="has-text-weight-bold is-family-monospace">0</span>
-            </p>
-            <p class="card-footer-item">
-                <button class="button" id="tomatePlus">+</button>
-            </p>
-        </footer>
     </div>
 </div>
