@@ -1,45 +1,42 @@
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="title is-5">Score</h2>
-                    <p>Commandes réalisées : 0</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="">Commande</h2>
-                    <ul class="">
-                        <li>Salade : <span id="nbSalade">0</span></li>
-                        <li>Tomate : <span id="nbTomate">0</span></li>
-                        <li>Oignon : <span id="nbOignon">0</span></li>
-                        <li>Viande : <span id="nbViande">0</span></li>
-                        <li>Fromage : <span id="nbFromage">0</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="row justify-content-between g-3 mt-1">
 
-    <div class="row">
-        <div class="col">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <p class="title is-4">Vos ingrédients</p>
+                <div class="card-header">
+                    <h4>Commande</h2>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Salade : <span id="nbSalade">0</span></li>
+                    <li class="list-group-item">Tomate : <span id="nbTomate">0</span></li>
+                    <li class="list-group-item">Oignon : <span id="nbOignon">0</span></li>
+                    <li class="list-group-item">Fromage : <span id="nbFromage">0</span></li>
+                    <li class="list-group-item">Viande : <span id="nbViande">0</span></li>
+                    <li class="list-group-item">Poivron : <span id="nbPoivron">0</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Score</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Commandes réussies : <span id="reussites">0</span> </li>
+                    <li class="list-group-item">Commandes ratées : <span id="ratees">0</span></li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="row">
 
-        <?php
-        $listeIngr = ["ingrcards/salade.php", "ingrcards/tomate.php", "ingrcards/fromage.php", "ingrcards/viande.php", "ingrcards/oignon.php", "ingrcards/poivron.php"];
-        shuffle($listeIngr);
-        ?>
+    <?php
+    $listeIngr = ["ingrcards/salade.php", "ingrcards/tomate.php", "ingrcards/fromage.php", "ingrcards/viande.php", "ingrcards/oignon.php", "ingrcards/poivron.php"];
+    shuffle($listeIngr);
+    ?>
+
+    <div class="row g-3 my-2">
 
         <?php include $listeIngr[0] ?>
         <?php include $listeIngr[1] ?>
@@ -49,5 +46,6 @@
         <?php include $listeIngr[5] ?>
 
     </div>
+
 
 </div>

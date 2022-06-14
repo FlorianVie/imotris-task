@@ -7,7 +7,7 @@
         <div class="card-footer">
             <div class="btn-group font-monospace" role="group" aria-label="Basic example">
                 <button id="poivronMoins" type="button" class="btn btn-secondary">-</button>
-                <button id="poivonC" type="button" class="btn">0</button>
+                <button id="poivronC" type="button" class="btn">0</button>
                 <button id="poivronPlus" type="button" class="btn btn-secondary">+</button>
             </div>
         </div>

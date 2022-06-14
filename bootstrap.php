@@ -58,7 +58,8 @@
             tomate: 0,
             fromage: 0,
             viande: 0,
-            oignon: 0
+            oignon: 0,
+            poivron: 0,
         },
         // Changement de valeur dans Data inialisé au chargement
         on_load: function(data) {
@@ -131,6 +132,20 @@
                 var c = $('#viandeC').text();
                 $('#viandeC').text(parseInt(c) + 1);
                 jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+            });
+
+            // Compteur Poivron
+
+            $("#poivronMoins").click(function() {
+                var c = $('#poivronC').text();
+                $('#poivronC').text(parseInt(c) - 1);
+                jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+            });
+
+            $("#poivronPlus").click(function() {
+                var c = $('#poivronC').text();
+                $('#poivronC').text(parseInt(c) + 1);
+                jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
             });
 
 
