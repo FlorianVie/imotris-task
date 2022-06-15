@@ -6,10 +6,10 @@ shuffle($listeIngr);
 <div class="container">
     <div class="row justify-content-around g-3 mt-1">
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
-                    <h4>Score</h4>
+                    <h5>Score</h5>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Réussies : <span id="reussites">0</span> </li>
@@ -18,19 +18,51 @@ shuffle($listeIngr);
             </div>
         </div>
 
+        <div class="col-md-3">
+            <h3 class="mt-3 font-monospace">
+                <span id="timer"></span>
+            </h3>
+        </div>
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
-                    <h4>Commande</h2>
+                    <h5>Commande</h5>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Salade : <span id="nbSalade">0</span></li>
-                    <li class="list-group-item">Tomate : <span id="nbTomate">0</span></li>
-                    <li class="list-group-item">Oignon : <span id="nbOignon">0</span></li>
-                    <li class="list-group-item">Fromage : <span id="nbFromage">0</span></li>
-                    <li class="list-group-item">Viande : <span id="nbViande">0</span></li>
-                    <li class="list-group-item">Poivron : <span id="nbPoivron">0</span></li>
-                </ul>
+                <table class="table table-sm table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ingrédients</th>
+                            <th>Quantités</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Salade</td>
+                            <td><span id="nbSalade">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tomate</td>
+                            <td><span id="nbTomate">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Oignon</td>
+                            <td><span id="nbOignon">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Fromage</td>
+                            <td><span id="nbFromage">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Viande</td>
+                            <td><span id="nbViande">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Poivron</td>
+                            <td><span id="nbPoivron">0</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

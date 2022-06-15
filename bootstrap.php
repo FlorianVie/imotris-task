@@ -24,19 +24,23 @@
 </head>
 
 <script>
-    /*     function addIngr(ingr) {
-        var c = $('#' + ingr).text();
-        $('#' + ingr).text(parseInt(c) + 1);
-    }
+    function startTimer(duration, display) {
+        var timer = duration - 1,
+            minutes, seconds;
+        setInterval(function() {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
 
-    function remIngr(ingr) {
-        var c = $('#' + ingr).text();
-        $('#' + ingr).text(parseInt(c) - 1);
-    }
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    function getIngr(ingr) {
-        return $('#' + ingr).text();
-    } */
+            display.text(minutes + ":" + seconds);
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+    }
 </script>
 
 <body>
@@ -51,6 +55,7 @@
 
 <script>
     var temps_feedback = 750;
+    var temps_burger = 120 * 1000;
 
     var jsPsych = initJsPsych({
         on_finish: function() {
@@ -81,7 +86,7 @@
             stimulus: `<?php include 'burgers.php'; ?>`,
             choices: ['Suivant'],
             prompt: "<p></p>",
-            trial_duration: 100000,
+            trial_duration: temps_burger,
             data: {
                 salade: 0,
                 tomate: 0,
@@ -92,6 +97,10 @@
             },
             // Changement de valeur dans Data inialisé au chargement et chargement de la commande
             on_load: function(data) {
+
+                startTimer(temps_burger / 1000, $("#timer"))
+
+                
 
                 // Compteur Salade
 
