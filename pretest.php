@@ -14,6 +14,8 @@
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
     <script src="jspsych/plugin-preload.js"></script>
     <script src="jspsych/plugin-browser-check.js"></script>
+    <script src="jspsych/plugin-instructions.js"></script>
+
 
 
 
@@ -49,7 +51,8 @@
     <?php
     include "fonctions.php";
     $bdd = getBD();
-    $ingr = getIngredients($bdd, 3);
+
+    $ingr_app = getIngredientsByDB($bdd, 10, "Pretest_apprentissage");
     ?>
 
 </body>
@@ -72,20 +75,57 @@
     }
     sequence.push(preload);
 
+
+    var instructionsGenerales = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            'Welcome to the experiment. Click next to begin.',
+            'This is the second page of instructions.',
+            'This is the final page.'
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true
+    };
+    sequence.push(instructionsGenerales);
+
+
+
     var browser = {
         type: jsPsychBrowserCheck
     };
     sequence.push(browser);
 
 
+    var instructionsApprentissage = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            '<h1>Entrainement</h1>',
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true
+    };
+    sequence.push(instructionsApprentissage);
+
+    // ------------
+    // ENTRAINEMENT
+    // ------------
+
     <?php
-    for ($i = 0; $i < count($ingr); $i++) {
+    for ($i = 0; $i < count($ingr_app); $i++) {
     ?>
 
         var click_trial = {
             type: jsPsychHtmlButtonResponse,
             stimulus: `<?php include 'burgers.php'; ?>`,
-            choices: ['Suivant'],
+            choices: ['Envoyer la commande'],
             prompt: "<p></p>",
             trial_duration: temps_burger,
             data: {
@@ -95,7 +135,7 @@
                 viande: 0,
                 oignon: 0,
                 poivron: 0,
-                part: "burger",
+                part: "burger_apprentissage",
                 burgerID: <?php echo $i + 1 ?>
             },
             // Changement de valeur dans Data inialisé au chargement et chargement de la commande
@@ -189,32 +229,32 @@
 
 
                 // Nb Salade
-                nbSalade = <?php echo $ingr[$i]['Salade'] ?>;
+                nbSalade = <?php echo $ingr_app[$i]['Salade'] ?>;
                 $("#nbSalade").text(nbSalade);
                 jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
 
                 // Nb Tomate
-                nbTomate = <?php echo $ingr[$i]['Tomate'] ?>;
+                nbTomate = <?php echo $ingr_app[$i]['Tomate'] ?>;
                 $("#nbTomate").text(nbTomate);
                 jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
 
                 // Nb Oignon
-                nbOignon = <?php echo $ingr[$i]['Oignon'] ?>;
+                nbOignon = <?php echo $ingr_app[$i]['Oignon'] ?>;
                 $("#nbOignon").text(nbOignon);
                 jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
 
                 // Nb Fromage
-                nbFromage = <?php echo $ingr[$i]['Fromage'] ?>;
+                nbFromage = <?php echo $ingr_app[$i]['Fromage'] ?>;
                 $("#nbFromage").text(nbFromage);
                 jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
 
                 // Nb Viande
-                nbViande = <?php echo $ingr[$i]['Viande'] ?>;
+                nbViande = <?php echo $ingr_app[$i]['Viande'] ?>;
                 $("#nbViande").text(nbViande);
                 jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
 
                 // Nb Poivron
-                nbPoivron = <?php echo $ingr[$i]['Poivron'] ?>;
+                nbPoivron = <?php echo $ingr_app[$i]['Poivron'] ?>;
                 $("#nbPoivron").text(nbPoivron);
                 jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
 
