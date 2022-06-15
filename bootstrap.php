@@ -94,13 +94,19 @@
                 viande: 0,
                 oignon: 0,
                 poivron: 0,
+                part: "burger",
+                burgerID: <?php echo $i + 1 ?>
             },
             // Changement de valeur dans Data inialisé au chargement et chargement de la commande
             on_load: function(data) {
 
                 startTimer(temps_burger / 1000, $("#timer"))
 
-                
+                var correct_count = jsPsych.data.get().select('correct').sum();
+                var burger_count = jsPsych.data.get().select('burgerID').count();
+                console.log(correct_count, "/", burger_count, correct_count / burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
 
                 // Compteur Salade
 

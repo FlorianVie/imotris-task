@@ -11,10 +11,20 @@ shuffle($listeIngr);
                 <div class="card-header">
                     <h5>Score</h5>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Réussies : <span id="reussites">0</span> </li>
-                    <li class="list-group-item">Ratées : <span id="ratees">0</span></li>
-                </ul>
+                <table class="table table-sm table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ratées</th>
+                            <th>Réussies</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span id="ratees">0</span></td>
+                            <td><span id="reussites">0</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
