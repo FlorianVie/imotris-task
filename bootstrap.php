@@ -10,6 +10,10 @@
     <script src="jquery-3.6.0.min.js"></script>
     <script src="jspsych/jspsych.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="jspsych/plugin-browser-check.js"></script>
+
 
 
     <link rel="stylesheet" href="jspsych/jspsych.css">
@@ -39,13 +43,15 @@
 
     <?php
     include "fonctions.php";
-    $bdd = getBD(); 
+    $bdd = getBD();
     $ingr = getIngredients($bdd, 3);
     ?>
 
 </body>
 
 <script>
+    var temps_feedback = 750;
+
     var jsPsych = initJsPsych({
         on_finish: function() {
             jsPsych.data.displayData();
@@ -53,6 +59,18 @@
     });
 
     const sequence = [];
+
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true
+    }
+    sequence.push(preload);
+
+    var browser = {
+        type: jsPsychBrowserCheck
+    };
+    sequence.push(browser);
+
 
     <?php
     for ($i = 0; $i < count($ingr); $i++) {
@@ -63,7 +81,7 @@
             stimulus: `<?php include 'burgers.php'; ?>`,
             choices: ['Suivant'],
             prompt: "<p></p>",
-            trial_duration: 10000,
+            trial_duration: 100000,
             data: {
                 salade: 0,
                 tomate: 0,
@@ -188,16 +206,32 @@
             },
             on_finish: function(data) {
                 data.stimulus = "5 ingredients";
-                
-                if (data.salade == data.salade_nb) {
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
                     data.correct = 1
                 } else {
                     data.correct = 0
                 }
+
+                console.log("Commande <?php echo $i + 1 ?> : ", data.correct);
             }
         };
-
         sequence.push(click_trial);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
 
     <?php
     }
