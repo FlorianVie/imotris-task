@@ -63,6 +63,7 @@
             stimulus: `<?php include 'burgers.php'; ?>`,
             choices: ['Suivant'],
             prompt: "<p></p>",
+            trial_duration: 100000,
             data: {
                 salade: 0,
                 tomate: 0,
@@ -71,7 +72,7 @@
                 oignon: 0,
                 poivron: 0,
             },
-            // Changement de valeur dans Data inialisé au chargement
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
             on_load: function(data) {
 
                 // Compteur Salade
@@ -187,7 +188,6 @@
             },
             on_finish: function(data) {
                 data.stimulus = "5 ingredients";
-                
                 
                 if (data.salade == data.salade_nb) {
                     data.correct = 1
