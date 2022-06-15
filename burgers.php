@@ -30,7 +30,7 @@ shuffle($listeIngr);
 
         <div class="col-md-3">
             <h3 class="mt-3 font-monospace">
-                <span id="timer"></span>
+                <span id="timer">..:..</span>
             </h3>
         </div>
 
