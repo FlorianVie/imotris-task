@@ -39,7 +39,7 @@
 
     <?php
     include "fonctions.php";
-    $bdd = getBD();
+    $bdd = getBD(); 
     $ingr = getIngredients($bdd, 3);
     ?>
 
@@ -63,7 +63,7 @@
             stimulus: `<?php include 'burgers.php'; ?>`,
             choices: ['Suivant'],
             prompt: "<p></p>",
-            trial_duration: 100000,
+            trial_duration: 10000,
             data: {
                 salade: 0,
                 tomate: 0,
