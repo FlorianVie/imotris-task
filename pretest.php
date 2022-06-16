@@ -15,6 +15,7 @@
     <script src="jspsych/plugin-preload.js"></script>
     <script src="jspsych/plugin-browser-check.js"></script>
     <script src="jspsych/plugin-instructions.js"></script>
+    <script src="jspsych/plugin-call-function.js"></script>
 
 
 
@@ -44,6 +45,20 @@
             }
         }, 1000);
     }
+
+    function saveData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                alert("Données transmises !");
+                var response = JSON.parse(xhr.responseText);
+                console.log(response.success);
+            }
+        };
+        xhr.send(jsPsych.data.get().json());
+    }
 </script>
 
 <body>
@@ -72,6 +87,7 @@
         on_finish: function() {
             jsPsych.data.displayData();
             console.log(jsPsych.data.get().csv());
+            saveData(jsPsych.data.get().csv());
         }
     });
 
@@ -98,7 +114,7 @@
             part: "instructions",
         },
         pages: [
-            'Welcome to the experiment. Click next to begin.',
+            "<h1>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h1>",
         ],
         button_label_next: "Continuer",
         button_label_previous: "Retour",
@@ -779,6 +795,7 @@
     <?php
     }
     ?>
+
 
 
 
