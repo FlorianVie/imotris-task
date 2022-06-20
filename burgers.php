@@ -80,7 +80,7 @@ shuffle($listeIngr);
 
 
 
-    <div class="row g-3 my-2">
+    <div class="row g-3 my-2 mb-5">
 
         <?php include $listeIngr[0] ?>
         <?php include $listeIngr[1] ?>

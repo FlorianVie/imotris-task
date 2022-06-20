@@ -61,6 +61,13 @@
     }
 </script>
 
+<style>
+    .jspsych-btn {
+        margin-bottom: 50px;
+        font-weight: bold;
+    }
+</style>
+
 <body>
 
     <?php
@@ -114,7 +121,11 @@
             part: "instructions",
         },
         pages: [
-            "<h1>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h1>",
+            "<h2>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h2>" +
+            "<p>Cette expérience est une phase de pré-test. Il est possible de rencontrer des bugs, si tel est le cas, merci de bien vouloir les faire remonter à l’expérimentateur à l’adresse suivante : <span class='font-monospace'>florian.vie@univ-ubs.fr</span></p>" +
+            "<p>Les données enregistrées sont anonymes, il est donc important que vous notiez votre identifiant ci-dessus. Celui-ci permettra à l’expérimentateur de vous transmettre vos données ou de les supprimer si vous en faite la demande.</p>" +
+            "<p>L’expérience se déroule en trois phases. Une phase d’entrainement à la réalisation de commandes de burgers, une tâche facile et une tâche plus difficile.</p>" +
+            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>",
         ],
         button_label_next: "Continuer",
         button_label_previous: "Retour",
@@ -142,9 +153,20 @@
             part: "instructions",
         },
         pages: [
-            '<h1>Entrainement</h1>',
+            "<div class='container'>" +
+            "<h1>Entrainement</h1>" +
+            "<p>La tâche qui va suivre consiste à composer des burgers en suivant une commande. L’interface est comme suivant :</p>" +
+            "<div class='row justify-content-center'><div class='col-md-6'><img src='assets/capture.png' class='img-fluid'></div></div>" +
+            "<p>Sur le panneau en haut à droite se trouve la liste des ingrédients et la quantité nécessaire pour réaliser une commande.</p>" +
+            "<p>Votre tâche est de faire correspondre les quantités d’ingrédients de la commande en cliquant sur les boutons + et - des ingrédients en bas de l’interface.</p>" +
+            "<p>En haut, au centre de l’interface se trouve un minuteur qui vous indique le temps qu’il vous reste pour réaliser cette commande. Il sera réinitialisé à chaque commande.</p>" +
+            "<p>En haut, à gauche de l'interface, vous retrouverez votre score pour la phase expérimentale en cours.</p>" +
+            "<p>Lorsque vous aurez fait correspondre la quantité d’ingrédients avec la commande, vous pourrez cliquer sur Envoyer la commande et passer à la suivante.</p>" +
+            "<p>Une icône verte indiquera que vous avez correctement réalisé la commande, sinon l’icône sera rouge.</p>" +
+            "<p>Cliquez sur <i>Commencer</i> pour commencer la phase d'entrainement à la tâche</p>" +
+            "</div>",
         ],
-        button_label_next: "Continuer",
+        button_label_next: "Commencer",
         button_label_previous: "Retour",
         show_clickable_nav: true
     };
@@ -342,6 +364,42 @@
     }
     ?>
 
+    var recapApprentissage = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase d'apprentissage</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_apprentissage"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_apprentissage"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapApprentissage);
+
+
     // ------------
     // FACILE
     // ------------
@@ -352,7 +410,12 @@
             part: "instructions",
         },
         pages: [
-            '<h1>Facile</h1>',
+            '<h1>Facile</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit. Le programme a retenu le temps moyen dont vous avez besoin pour faire une commande.</p>" +
+            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en rajoutant quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
         ],
         button_label_next: "Continuer",
         button_label_previous: "Retour",
@@ -569,6 +632,41 @@
     }
     ?>
 
+var recapFacile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase facile</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_facile"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_facile"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                    part: "burger_facile"
+                }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapFacile);
+
     // ------------
     // DIFFICILE
     // ------------
@@ -579,7 +677,12 @@
             part: "instructions",
         },
         pages: [
-            '<h1>Difficile</h1>',
+            '<h1>Difficile</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit considérablement.</p>" +
+            "<p>La limite de temps pour chaque commande est établie sur votre temps moyen de réalisation de commande en <strong>retirant</strong> quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
         ],
         button_label_next: "Continuer",
         button_label_previous: "Retour",
@@ -795,6 +898,41 @@
     <?php
     }
     ?>
+
+var recapDifficile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase difficile</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_difficile"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_difficile"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                    part: "burger_difficile"
+                }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapDifficile);
 
 
 
