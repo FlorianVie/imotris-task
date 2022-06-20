@@ -52,7 +52,7 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function() {
             if (xhr.status == 200) {
-                alert("Données transmises !");
+                alert("Données transmises ! Merci beaucoup !");
                 var response = JSON.parse(xhr.responseText);
                 console.log(response.success);
             }
