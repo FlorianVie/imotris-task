@@ -87,7 +87,7 @@
 
 <script>
     var temps_feedback = 750;
-    var temps_burger = 120 * 1000;
+    var temps_burger = 45 * 1000;
     var modif_temps = 0.25;
 
     var jsPsych = initJsPsych({
