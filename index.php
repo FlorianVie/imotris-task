@@ -32,7 +32,7 @@
         <hr>
 
         <div class="row justify-content-center">
-            <div class="col-md-4 text-center">
+            <div class="col-md-3 text-center">
                 <h2>Pré-test</h2>
 
                 <form action="pretest.php" method="get">
@@ -66,12 +66,13 @@
 
             </div>
 
-            <div class="col-md-4 text-center">
+            <div class="col-md-3 text-center">
                 <h2>Data</h2>
-                <?php
-                $rt = getDataRT($bdd);
-
-                ?>
+                
+                <form action="datap.php">
+                    <input type="text" class="form-control m-3" name="p" placeholder="ID Participant">
+                    <button class="btn btn-secondary">Afficher données</button>
+                </form>
 
 
 
