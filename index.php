@@ -20,6 +20,7 @@
     <?php
     include "fonctions.php";
     $bdd = getBD();
+    $participants = getParticipants($bdd);
     ?>
 
     <div class="container">
@@ -68,9 +69,19 @@
 
             <div class="col-md-3 text-center">
                 <h2>Data</h2>
-                
+
                 <form action="datap.php">
-                    <input type="text" class="form-control m-3" name="p" placeholder="ID Participant">
+
+                    <select class="form-select m-3" name="p" id="participants">
+                        <?php
+                        for ($i = 0; $i < count($participants); $i++) {
+                        ?>
+                            <option value="<?php echo $participants[$i]['participant'] ?>"><?php echo $participants[$i]['participant'] ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+
                     <button class="btn btn-secondary">Afficher données</button>
                 </form>
 

@@ -83,3 +83,12 @@ function getDataPMean($bdd, $p)
     $req->closeCursor();
     return $data;
 }
+
+function getParticipants($bdd)
+{
+    $req = $bdd->prepare("select participant from data_test group by participant");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}
