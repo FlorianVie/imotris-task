@@ -71,3 +71,15 @@ function getDataPDif($bdd, $p)
     $req->closeCursor();
     return $data;
 }
+
+function getDataPMean($bdd, $p)
+{
+    $req = $bdd->prepare("select participant, part, avg(correct) as score, std(correct) as std
+                            from data_test
+                            where (part = 'burger_apprentissage' or part = 'burger_facile' or part = 'burger_difficile') and participant = '" . $p . "'
+                            group by participant, part;");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}

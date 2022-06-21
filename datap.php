@@ -24,9 +24,12 @@
     $dataApp = getDataPApp($bdd, $p);
     $dataFac = getDataPFac($bdd, $p);
     $dataDif = getDataPDif($bdd, $p);
+    $dataMean = getDataPMean($bdd, $p);
     ?>
 
     <script>
+        // Temps de réponse
+
         const labels_rt = [
             <?php
             for ($i = 0; $i < count($dataApp); $i++) {
@@ -87,6 +90,48 @@
                 }
             }
         };
+
+
+
+        // Performance
+
+        const labels_perf = ["Phases"];
+
+        const data_perf = {
+            labels: labels_perf,
+            datasets: [{
+                    label: 'Apprentissage',
+                    backgroundColor: 'rgb(209, 175, 148)',
+                    borderColor: 'rgb(209, 175, 148)',
+                    data: [<?php echo "'" . $dataMean[0]['score'] . "'," ?>],
+                },
+                {
+                    label: 'Facile',
+                    backgroundColor: 'rgb(83, 134, 228)',
+                    borderColor: 'rgb(83, 134, 228)',
+                    data: [<?php echo "'" . $dataMean[2]['score'] . "'," ?>],
+                },
+                {
+                    label: 'Difficile',
+                    backgroundColor: 'rgb(238, 46, 49)',
+                    borderColor: 'rgb(238, 46, 49)',
+                    data: [<?php echo "'" . $dataMean[1]['score'] . "'," ?>],
+                }
+            ]
+        };
+
+        const config_perf = {
+            type: 'bar',
+            data: data_perf,
+            options: {
+                scales: {
+                    y: {
+                        suggestedMin: 0,
+                        suggestedMax: 1
+                    }
+                }
+            }
+        };
     </script>
 
 
@@ -97,14 +142,14 @@
             </div>
         </div>
 
-        
+
         <div class="row mt-4">
 
             <div class="col-md-6">
                 <h2>Temps de réponse</h2>
                 <canvas id="rtPart"></canvas>
                 <script>
-                    const myChart = new Chart(
+                    const rtChart = new Chart(
                         document.getElementById('rtPart'),
                         config_rt
                     );
@@ -113,7 +158,14 @@
             </div>
 
             <div class="col-md-6">
-                    <h2>Performance</h2>
+                <h2>Performance</h2>
+                <canvas id="perfPart"></canvas>
+                <script>
+                    const perfChart = new Chart(
+                        document.getElementById('perfPart'),
+                        config_perf
+                    );
+                </script>
             </div>
 
         </div>
