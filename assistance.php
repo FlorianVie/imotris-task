@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pretest Burgers</title>
+    <link rel="icon" type="image/png" href="assets/chef.png">
+
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-html-button-response.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="jspsych/plugin-browser-check.js"></script>
+    <script src="jspsych/plugin-instructions.js"></script>
+    <script src="jspsych/plugin-call-function.js"></script>
+
+
+
+
+    <link rel="stylesheet" href="jspsych/jspsych.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+
+</head>
+
+<script>
+    function startTimer(duration, display) {
+        var timer = duration - 1,
+            minutes, seconds;
+        setInterval(function() {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.text(minutes + ":" + seconds);
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+    }
+
+    function saveData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                alert("Données transmises ! Merci beaucoup !");
+                var response = JSON.parse(xhr.responseText);
+                console.log(response.success);
+            }
+        };
+        xhr.send(jsPsych.data.get().json());
+    }
+</script>
+
+<style>
+    .jspsych-btn {
+        margin-bottom: 50px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+
+    <?php
+    include "fonctions.php";
+    $bdd = getBD();
+
+    $nbApp = $_GET['a'];
+    $nbFac = $_GET['f'];
+    $nbDif = $_GET['d'];
+    $nbFacAss = $_GET['fass'];
+    $nbDifAss = $_GET['dass'];
+
+    $ingr_app = getIngredientsByDB($bdd, $nbApp, "Pretest_apprentissage");
+    $ingr_fac = getIngredientsByDB($bdd, $nbFac, "Pretest_facile");
+    $ingr_dif = getIngredientsByDB($bdd, $nbDif, "Pretest_difficile");
+    $ingr_fass = getIngredientsByDB($bdd, $nbFacAss, "assistance_facile");
+    $ingr_fass_correct = getIngredientsByDB($bdd, $nbFacAss, "assistance_facile_correct");
+    $ingr_dass = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile");
+    $ingr_dass_correct = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile_correct");
+    ?>
+
+</body>
+
+<script>
+    var temps_feedback = 750;
+    var temps_burger = 45 * 1000;
+    var modif_temps = 0.25;
+
+    var jsPsych = initJsPsych({
+        on_finish: function() {
+            jsPsych.data.displayData();
+            console.log(jsPsych.data.get().csv());
+            saveData(jsPsych.data.get().csv());
+        }
+    });
+
+    var participant_id = jsPsych.randomization.randomID(5);
+
+    jsPsych.data.addProperties({
+        participant: participant_id,
+    });
+    console.log(participant_id);
+
+    const sequence = [];
+
+
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true
+    }
+    sequence.push(preload);
+
+
+    var instructionsGenerales = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            "<h2>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h2>" +
+            "<p>Cette expérience est une phase de pré-test. Il est possible de rencontrer des bugs, si tel est le cas, merci de bien vouloir les faire remonter à l’expérimentateur à l’adresse suivante : <span class='font-monospace'>florian.vie@univ-ubs.fr</span></p>" +
+            "<p>Les données enregistrées sont anonymes, il est donc important que vous notiez votre identifiant ci-dessus. Celui-ci permettra à l’expérimentateur de vous transmettre vos données ou de les supprimer si vous en faite la demande.</p>" +
+            "<p>L’expérience se déroule en trois phases. Une phase d’entrainement à la réalisation de commandes de burgers, une tâche facile et une tâche plus difficile.</p>" +
+            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true
+    };
+    sequence.push(instructionsGenerales);
+
+
+
+    var browser = {
+        type: jsPsychBrowserCheck
+    };
+    sequence.push(browser);
+
+
+
+
+    // ------------
+    // ENTRAINEMENT
+    // ------------
+
+    var instructionsApprentissage = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            "<div class='container'>" +
+            "<h1>Entrainement</h1>" +
+            "<p>La tâche qui va suivre consiste à composer des burgers en suivant une commande. L’interface est comme suivant :</p>" +
+            "<div class='row justify-content-center'><div class='col-md-6'><img src='assets/capture.png' class='img-fluid'></div></div>" +
+            "<p>Sur le panneau en haut à droite se trouve la liste des ingrédients et la quantité nécessaire pour réaliser une commande.</p>" +
+            "<p>Votre tâche est de faire correspondre les quantités d’ingrédients de la commande en cliquant sur les boutons + et - des ingrédients en bas de l’interface.</p>" +
+            "<p>En haut, au centre de l’interface se trouve un minuteur qui vous indique le temps qu’il vous reste pour réaliser cette commande. Il sera réinitialisé à chaque commande.</p>" +
+            "<p>En haut, à gauche de l'interface, vous retrouverez votre score pour la phase expérimentale en cours.</p>" +
+            "<p>Lorsque vous aurez fait correspondre la quantité d’ingrédients avec la commande, vous pourrez cliquer sur Envoyer la commande et passer à la suivante.</p>" +
+            "<p>Une icône verte indiquera que vous avez correctement réalisé la commande, sinon l’icône sera rouge.</p>" +
+            "<p>Cliquez sur <i>Commencer</i> pour commencer la phase d'entrainement à la tâche</p>" +
+            "</div>",
+        ],
+        button_label_next: "Commencer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true
+    };
+    sequence.push(instructionsApprentissage);
+
+
+    <?php
+    for ($i = 0; $i < count($ingr_app); $i++) {
+    ?>
+
+        var burger_app = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `<?php include 'burgers.php'; ?>`,
+            choices: ['Envoyer la commande'],
+            prompt: "<p></p>",
+            trial_duration: temps_burger,
+            data: {
+                salade: 0,
+                tomate: 0,
+                fromage: 0,
+                viande: 0,
+                oignon: 0,
+                poivron: 0,
+                part: "burger_apprentissage",
+                burgerID: <?php echo $i + 1 ?>
+            },
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
+            on_load: function(data) {
+
+                startTimer(temps_burger / 1000, $("#timer"))
+
+                // Compteur score
+
+                var correct_count = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('correct').sum();
+                var burger_count = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('burgerID').count();
+                console.log(correct_count, "/", burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
+
+                // Compteur Salade
+
+                $("#saladePlus").click(function(data) {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+                });
+                $("#saladeMoins").click(function() {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+                });
+
+                // Compteur Fromage
+
+                $("#fromageMoins").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+                });
+                $("#fromagePlus").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+                });
+
+                // Compteur Oignon
+
+                $("#oignonMoins").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+                });
+                $("#oignonPlus").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+                });
+
+                // Compteur Tomate
+
+                $("#tomateMoins").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+                });
+                $("#tomatePlus").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+                });
+
+                // Compteur Viande
+
+                $("#viandeMoins").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+                });
+                $("#viandePlus").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+                });
+
+                // Compteur Poivron
+
+                $("#poivronMoins").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+                });
+                $("#poivronPlus").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
+                });
+
+
+                // Nb Salade
+                nbSalade = <?php echo $ingr_app[$i]['Salade'] ?>;
+                $("#nbSalade").text(nbSalade);
+                jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
+
+                // Nb Tomate
+                nbTomate = <?php echo $ingr_app[$i]['Tomate'] ?>;
+                $("#nbTomate").text(nbTomate);
+                jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
+
+                // Nb Oignon
+                nbOignon = <?php echo $ingr_app[$i]['Oignon'] ?>;
+                $("#nbOignon").text(nbOignon);
+                jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
+
+                // Nb Fromage
+                nbFromage = <?php echo $ingr_app[$i]['Fromage'] ?>;
+                $("#nbFromage").text(nbFromage);
+                jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
+
+                // Nb Viande
+                nbViande = <?php echo $ingr_app[$i]['Viande'] ?>;
+                $("#nbViande").text(nbViande);
+                jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
+
+                // Nb Poivron
+                nbPoivron = <?php echo $ingr_app[$i]['Poivron'] ?>;
+                $("#nbPoivron").text(nbPoivron);
+                jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
+
+
+            },
+            on_finish: function(data) {
+                data.stimulus = "5 ingredients";
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
+                    data.correct = 1
+                } else {
+                    data.correct = 0
+                }
+
+                console.log("Commande apprentissage <?php echo $i + 1 ?> : ", data.correct);
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                console.log("rt :", data.rt);
+                console.log("rt moyen :", tm)
+            }
+        };
+        sequence.push(burger_app);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            data: {
+                part: "feedback"
+            },
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
+
+    <?php
+    }
+    ?>
+
+    var recapApprentissage = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase d'apprentissage</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_apprentissage"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_apprentissage"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                part: "burger_apprentissage"
+            }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapApprentissage);
+
+
+    // ------------
+    // FACILE
+    // ------------
+
+    var instructionsFacile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            '<h1>Facile</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit. Le programme a retenu le temps moyen dont vous avez besoin pour faire une commande.</p>" +
+            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en rajoutant quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+    };
+    sequence.push(instructionsFacile);
+
+
+    <?php
+    for ($i = 0; $i < count($ingr_fac); $i++) {
+    ?>
+
+        var burger_facile = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `<?php include 'burgers.php'; ?>`,
+            choices: ['Envoyer la commande'],
+            prompt: "<p></p>",
+            trial_duration: temps_burger,
+            data: {
+                salade: 0,
+                tomate: 0,
+                fromage: 0,
+                viande: 0,
+                oignon: 0,
+                poivron: 0,
+                part: "burger_facile",
+                burgerID: <?php echo $i + 1 ?>
+            },
+            on_start: function(data) {
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                tms = tm + tm * modif_temps;
+                //console.log(data.rt, tms);
+                jsPsych.current_trial.trial_duration = tms;
+            },
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
+            on_load: function(data) {
+
+                var tms = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean() / 1000;
+
+                startTimer(tms + tms * modif_temps, $("#timer"));
+
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps, $("#timer");
+
+
+                // Compteurs score
+
+                var correct_count = jsPsych.data.get().filter({
+                    part: "burger_facile"
+                }).select('correct').sum();
+                var burger_count = jsPsych.data.get().filter({
+                    part: "burger_facile"
+                }).select('burgerID').count();
+                console.log(correct_count, "/", burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
+
+                // Compteur Salade
+
+                $("#saladePlus").click(function(data) {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+                });
+                $("#saladeMoins").click(function() {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+                });
+
+                // Compteur Fromage
+
+                $("#fromageMoins").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+                });
+                $("#fromagePlus").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+                });
+
+                // Compteur Oignon
+
+                $("#oignonMoins").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+                });
+                $("#oignonPlus").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+                });
+
+                // Compteur Tomate
+
+                $("#tomateMoins").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+                });
+                $("#tomatePlus").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+                });
+
+                // Compteur Viande
+
+                $("#viandeMoins").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+                });
+                $("#viandePlus").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+                });
+
+                // Compteur Poivron
+
+                $("#poivronMoins").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+                });
+                $("#poivronPlus").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
+                });
+
+
+                // Nb Salade
+                nbSalade = <?php echo $ingr_fac[$i]['Salade'] ?>;
+                $("#nbSalade").text(nbSalade);
+                jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
+
+                // Nb Tomate
+                nbTomate = <?php echo $ingr_fac[$i]['Tomate'] ?>;
+                $("#nbTomate").text(nbTomate);
+                jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
+
+                // Nb Oignon
+                nbOignon = <?php echo $ingr_fac[$i]['Oignon'] ?>;
+                $("#nbOignon").text(nbOignon);
+                jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
+
+                // Nb Fromage
+                nbFromage = <?php echo $ingr_fac[$i]['Fromage'] ?>;
+                $("#nbFromage").text(nbFromage);
+                jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
+
+                // Nb Viande
+                nbViande = <?php echo $ingr_fac[$i]['Viande'] ?>;
+                $("#nbViande").text(nbViande);
+                jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
+
+                // Nb Poivron
+                nbPoivron = <?php echo $ingr_fac[$i]['Poivron'] ?>;
+                $("#nbPoivron").text(nbPoivron);
+                jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
+
+
+            },
+            on_finish: function(data) {
+                data.stimulus = "5 ingredients";
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
+                    data.correct = 1
+                } else {
+                    data.correct = 0
+                }
+
+                console.log("Commande facile <?php echo $i + 1 ?> : ", data.correct);
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                console.log("rt :", data.rt);
+                console.log("Temps moyen :", tm + tm * modif_temps)
+            }
+        };
+        sequence.push(burger_facile);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            data: {
+                part: "feedback"
+            },
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
+
+    <?php
+    }
+    ?>
+
+    var recapFacile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase facile</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_facile"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_facile"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                part: "burger_facile"
+            }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapFacile);
+
+
+    // ------------
+    // DIFFICILE
+    // ------------
+
+    var instructionsDifficile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            '<h1>Difficile</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit considérablement.</p>" +
+            "<p>La limite de temps pour chaque commande est établie sur votre temps moyen de réalisation de commande en <strong>retirant</strong> quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+    };
+    sequence.push(instructionsDifficile);
+
+
+    <?php
+    for ($i = 0; $i < count($ingr_dif); $i++) {
+    ?>
+
+        var burger_difficile = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `<?php include 'burgers.php'; ?>`,
+            choices: ['Envoyer la commande'],
+            prompt: "<p></p>",
+            trial_duration: temps_burger,
+            data: {
+                salade: 0,
+                tomate: 0,
+                fromage: 0,
+                viande: 0,
+                oignon: 0,
+                poivron: 0,
+                part: "burger_difficile",
+                burgerID: <?php echo $i + 1 ?>
+            },
+            on_start: function(data) {
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                tms = tm - tm * modif_temps;
+                //console.log(data.rt, tms);
+                jsPsych.current_trial.trial_duration = tms;
+            },
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
+            on_load: function(data) {
+
+                var tms = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean() / 1000;
+
+                startTimer(tms - tms * modif_temps, $("#timer"));
+
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms - tms * modif_temps;
+
+
+                // Compteurs score
+
+                var correct_count = jsPsych.data.get().filter({
+                    part: "burger_difficile"
+                }).select('correct').sum();
+                var burger_count = jsPsych.data.get().filter({
+                    part: "burger_difficile"
+                }).select('burgerID').count();
+                console.log(correct_count, "/", burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
+
+                // Compteur Salade
+
+                $("#saladePlus").click(function(data) {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+                });
+                $("#saladeMoins").click(function() {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+                });
+
+                // Compteur Fromage
+
+                $("#fromageMoins").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+                });
+                $("#fromagePlus").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+                });
+
+                // Compteur Oignon
+
+                $("#oignonMoins").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+                });
+                $("#oignonPlus").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+                });
+
+                // Compteur Tomate
+
+                $("#tomateMoins").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+                });
+                $("#tomatePlus").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+                });
+
+                // Compteur Viande
+
+                $("#viandeMoins").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+                });
+                $("#viandePlus").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+                });
+
+                // Compteur Poivron
+
+                $("#poivronMoins").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+                });
+                $("#poivronPlus").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
+                });
+
+
+                // Nb Salade
+                nbSalade = <?php echo $ingr_dif[$i]['Salade'] ?>;
+                $("#nbSalade").text(nbSalade);
+                jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
+
+                // Nb Tomate
+                nbTomate = <?php echo $ingr_dif[$i]['Tomate'] ?>;
+                $("#nbTomate").text(nbTomate);
+                jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
+
+                // Nb Oignon
+                nbOignon = <?php echo $ingr_dif[$i]['Oignon'] ?>;
+                $("#nbOignon").text(nbOignon);
+                jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
+
+                // Nb Fromage
+                nbFromage = <?php echo $ingr_dif[$i]['Fromage'] ?>;
+                $("#nbFromage").text(nbFromage);
+                jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
+
+                // Nb Viande
+                nbViande = <?php echo $ingr_dif[$i]['Viande'] ?>;
+                $("#nbViande").text(nbViande);
+                jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
+
+                // Nb Poivron
+                nbPoivron = <?php echo $ingr_dif[$i]['Poivron'] ?>;
+                $("#nbPoivron").text(nbPoivron);
+                jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
+
+
+            },
+            on_finish: function(data) {
+                data.stimulus = "5 ingredients";
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
+                    data.correct = 1
+                } else {
+                    data.correct = 0
+                }
+
+                console.log("Commande difficile <?php echo $i + 1 ?> : ", data.correct);
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                console.log("rt :", data.rt);
+                console.log("Temps moyen :", tm - tm * modif_temps)
+            }
+        };
+        sequence.push(burger_difficile);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            data: {
+                part: "feedback"
+            },
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
+
+    <?php
+    }
+    ?>
+
+    var recapDifficile = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase difficile</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_difficile"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_difficile"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                part: "burger_difficile"
+            }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapDifficile);
+
+
+
+    // ------------
+    // FACILE ASSISTANCE
+    // ------------
+
+    var instructionsFacileAssistance = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            '<h1>Facile avec assistance</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit. Le programme a retenu le temps moyen dont vous avez besoin pour faire une commande.</p>" +
+            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en rajoutant quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+    };
+    sequence.push(instructionsFacileAssistance);
+
+
+    <?php
+    for ($i = 0; $i < count($ingr_fass); $i++) {
+    ?>
+
+        var burger_facile_ass = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `<?php include 'burgers.php'; ?>`,
+            choices: ['Envoyer la commande'],
+            prompt: "<p></p>",
+            trial_duration: temps_burger,
+            data: {
+                salade: <?php echo $ingr_fass[$i]['Salade'] ?>,
+                tomate: <?php echo $ingr_fass[$i]['Tomate'] ?>,
+                fromage: <?php echo $ingr_fass[$i]['Fromage'] ?>,
+                viande: <?php echo $ingr_fass[$i]['Viande'] ?>,
+                oignon: <?php echo $ingr_fass[$i]['Oignon'] ?>,
+                poivron: <?php echo $ingr_fass[$i]['Poivron'] ?>,
+                part: "burger_facile_assistance",
+                burgerID: <?php echo $i + 1 ?>
+            },
+            on_start: function(data) {
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                tms = tm + tm * modif_temps;
+                //console.log(data.rt, tms);
+                jsPsych.current_trial.trial_duration = tms;
+            },
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
+            on_load: function(data) {
+
+                var tms = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean() / 1000;
+
+                startTimer(tms + tms * modif_temps, $("#timer"));
+
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps, $("#timer");
+
+
+                // Compteurs score
+
+                var correct_count = jsPsych.data.get().filter({
+                    part: "burger_facile_assistance"
+                }).select('correct').sum();
+                var burger_count = jsPsych.data.get().filter({
+                    part: "burger_facile_assistance"
+                }).select('burgerID').count();
+                console.log(correct_count, "/", burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
+
+                // Compteur Salade
+
+                $('#saladeC').text("<?php echo $ingr_fass[$i]['Salade'] ?>");
+                $("#saladePlus").click(function(data) {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+                });
+                $("#saladeMoins").click(function() {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+                });
+
+                // Compteur Fromage
+
+                $('#fromageC').text("<?php echo $ingr_fass[$i]['Fromage'] ?>");
+                $("#fromageMoins").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+                });
+                $("#fromagePlus").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+                });
+
+                // Compteur Oignon
+
+                $('#oignonC').text("<?php echo $ingr_fass[$i]['Oignon'] ?>");
+                $("#oignonMoins").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+                });
+                $("#oignonPlus").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+                });
+
+                // Compteur Tomate
+
+                $('#tomateC').text("<?php echo $ingr_fass[$i]['Tomate'] ?>");
+                $("#tomateMoins").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+                });
+                $("#tomatePlus").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+                });
+
+                // Compteur Viande
+
+                $('#viandeC').text("<?php echo $ingr_fass[$i]['Viande'] ?>");
+                $("#viandeMoins").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+                });
+                $("#viandePlus").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+                });
+
+                // Compteur Poivron
+
+                $('#poivronC').text("<?php echo $ingr_fass[$i]['Poivron'] ?>");
+                $("#poivronMoins").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+                });
+                $("#poivronPlus").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
+                });
+
+
+                // Nb Salade
+                nbSalade = <?php echo $ingr_fass_correct[$i]['Salade'] ?>;
+                $("#nbSalade").text(nbSalade);
+                jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
+
+                // Nb Tomate
+                nbTomate = <?php echo $ingr_fass_correct[$i]['Tomate'] ?>;
+                $("#nbTomate").text(nbTomate);
+                jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
+
+                // Nb Oignon
+                nbOignon = <?php echo $ingr_fass_correct[$i]['Oignon'] ?>;
+                $("#nbOignon").text(nbOignon);
+                jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
+
+                // Nb Fromage
+                nbFromage = <?php echo $ingr_fass_correct[$i]['Fromage'] ?>;
+                $("#nbFromage").text(nbFromage);
+                jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
+
+                // Nb Viande
+                nbViande = <?php echo $ingr_fass_correct[$i]['Viande'] ?>;
+                $("#nbViande").text(nbViande);
+                jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
+
+                // Nb Poivron
+                nbPoivron = <?php echo $ingr_fass_correct[$i]['Poivron'] ?>;
+                $("#nbPoivron").text(nbPoivron);
+                jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
+
+
+            },
+            on_finish: function(data) {
+                data.stimulus = "5 ingredients";
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
+                    data.correct = 1
+                } else {
+                    data.correct = 0
+                }
+
+                console.log("Commande facile <?php echo $i + 1 ?> : ", data.correct);
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                console.log("rt :", data.rt);
+                console.log("Temps moyen :", tm + tm * modif_temps)
+            }
+        };
+        sequence.push(burger_facile_ass);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            data: {
+                part: "feedback"
+            },
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
+
+    <?php
+    }
+    ?>
+
+    var recapFacileAssistance = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase facile avec assistance</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_facile_assistance"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_facile_assistance"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                part: "burger_facile_assistance"
+            }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapFacileAssistance);
+
+
+    // ------------
+    // DIFFICILE ASSISTANCE
+    // ------------
+
+    var instructionsDifficileAssistance = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            '<h1>Difficile avec assistance</h1>' +
+            "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
+            "<p>Cependant, dans cette phase, le temps vous sera réduit considérablement.</p>" +
+            "<p>La limite de temps pour chaque commande est établie sur votre temps moyen de réalisation de commande en <strong>retirant</strong> quelques secondes.</p>" +
+            "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
+            "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+    };
+    sequence.push(instructionsDifficileAssistance);
+
+
+    <?php
+    for ($i = 0; $i < count($ingr_dass); $i++) {
+    ?>
+
+        var burger_difficile_assistance = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `<?php include 'burgers.php'; ?>`,
+            choices: ['Envoyer la commande'],
+            prompt: "<p></p>",
+            trial_duration: temps_burger,
+            data: {
+                salade: <?php echo $ingr_dass[$i]['Salade'] ?>,
+                tomate: <?php echo $ingr_dass[$i]['Tomate'] ?>,
+                fromage: <?php echo $ingr_dass[$i]['Fromage'] ?>,
+                viande: <?php echo $ingr_dass[$i]['Viande'] ?>,
+                oignon: <?php echo $ingr_dass[$i]['Oignon'] ?>,
+                poivron: <?php echo $ingr_dass[$i]['Poivron'] ?>,
+                part: "burger_difficile_assistance",
+                burgerID: <?php echo $i + 1 ?>
+            },
+            on_start: function(data) {
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                tms = tm - tm * modif_temps;
+                //console.log(data.rt, tms);
+                jsPsych.current_trial.trial_duration = tms;
+            },
+            // Changement de valeur dans Data inialisé au chargement et chargement de la commande
+            on_load: function(data) {
+
+                var tms = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean() / 1000;
+
+                startTimer(tms - tms * modif_temps, $("#timer"));
+
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms - tms * modif_temps;
+
+
+                // Compteurs score
+
+                var correct_count = jsPsych.data.get().filter({
+                    part: "burger_difficile_assistance"
+                }).select('correct').sum();
+                var burger_count = jsPsych.data.get().filter({
+                    part: "burger_difficile_assistance"
+                }).select('burgerID').count();
+                console.log(correct_count, "/", burger_count);
+                $("#reussites").text(correct_count);
+                $("#ratees").text(burger_count - correct_count);
+
+                // Compteur Salade
+
+                $('#saladeC').text("<?php echo $ingr_dass[$i]['Salade'] ?>");
+                $("#saladePlus").click(function(data) {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) + 1;
+                });
+                $("#saladeMoins").click(function() {
+                    var c = $('#saladeC').text();
+                    $('#saladeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.salade = parseInt(c) - 1;
+                });
+
+                // Compteur Fromage
+
+                $('#fromageC').text("<?php echo $ingr_dass[$i]['Fromage'] ?>");
+                $("#fromageMoins").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) - 1;
+                });
+                $("#fromagePlus").click(function() {
+                    var c = $('#fromageC').text();
+                    $('#fromageC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.fromage = parseInt(c) + 1;
+                });
+
+                // Compteur Oignon
+
+                $('#oignonC').text("<?php echo $ingr_dass[$i]['Oignon'] ?>");
+                $("#oignonMoins").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) - 1;
+                });
+                $("#oignonPlus").click(function() {
+                    var c = $('#oignonC').text();
+                    $('#oignonC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.oignon = parseInt(c) + 1;
+                });
+
+                // Compteur Tomate
+
+                $('#tomateC').text("<?php echo $ingr_dass[$i]['Tomate'] ?>");
+                $("#tomateMoins").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) - 1;
+                });
+                $("#tomatePlus").click(function() {
+                    var c = $('#tomateC').text();
+                    $('#tomateC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.tomate = parseInt(c) + 1;
+                });
+
+                // Compteur Viande
+
+                $('#viandeC').text("<?php echo $ingr_dass[$i]['Viande'] ?>");
+                $("#viandeMoins").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) - 1;
+                });
+                $("#viandePlus").click(function() {
+                    var c = $('#viandeC').text();
+                    $('#viandeC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.viande = parseInt(c) + 1;
+                });
+
+                // Compteur Poivron
+
+                $('#poivronC').text("<?php echo $ingr_dass[$i]['Poivron'] ?>");
+                $("#poivronMoins").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) - 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) - 1;
+                });
+                $("#poivronPlus").click(function() {
+                    var c = $('#poivronC').text();
+                    $('#poivronC').text(parseInt(c) + 1);
+                    jsPsych.data.jsPsych.current_trial.data.poivron = parseInt(c) + 1;
+                });
+
+
+                // Nb Salade
+                nbSalade = <?php echo $ingr_dass_correct[$i]['Salade'] ?>;
+                $("#nbSalade").text(nbSalade);
+                jsPsych.data.jsPsych.current_trial.data.salade_nb = nbSalade;
+
+                // Nb Tomate
+                nbTomate = <?php echo $ingr_dass_correct[$i]['Tomate'] ?>;
+                $("#nbTomate").text(nbTomate);
+                jsPsych.data.jsPsych.current_trial.data.tomate_nb = nbTomate;
+
+                // Nb Oignon
+                nbOignon = <?php echo $ingr_dass_correct[$i]['Oignon'] ?>;
+                $("#nbOignon").text(nbOignon);
+                jsPsych.data.jsPsych.current_trial.data.oignon_nb = nbOignon;
+
+                // Nb Fromage
+                nbFromage = <?php echo $ingr_dass_correct[$i]['Fromage'] ?>;
+                $("#nbFromage").text(nbFromage);
+                jsPsych.data.jsPsych.current_trial.data.fromage_nb = nbFromage;
+
+                // Nb Viande
+                nbViande = <?php echo $ingr_dass_correct[$i]['Viande'] ?>;
+                $("#nbViande").text(nbViande);
+                jsPsych.data.jsPsych.current_trial.data.viande_nb = nbViande;
+
+                // Nb Poivron
+                nbPoivron = <?php echo $ingr_dass_correct[$i]['Poivron'] ?>;
+                $("#nbPoivron").text(nbPoivron);
+                jsPsych.data.jsPsych.current_trial.data.poivron_nb = nbPoivron;
+
+
+            },
+            on_finish: function(data) {
+                data.stimulus = "5 ingredients";
+
+                if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
+                    data.correct = 1
+                } else {
+                    data.correct = 0
+                }
+
+                console.log("Commande difficile <?php echo $i + 1 ?> : ", data.correct);
+
+                var tm = jsPsych.data.get().filter({
+                    part: "burger_apprentissage"
+                }).select('rt').mean();
+                data.rt_mean = tm;
+                console.log("rt :", data.rt);
+                console.log("Temps moyen :", tm - tm * modif_temps)
+            }
+        };
+        sequence.push(burger_difficile_assistance);
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "",
+            data: {
+                part: "feedback"
+            },
+            trial_duration: temps_feedback,
+            stimulus: function() {
+                var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+                if (last_trial_correct) {
+                    return "<img src='assets/correct.png' alt='' width='100px'>";
+                } else {
+                    return "<img src='assets/incorrect.png' alt='' width='100px'>";
+                }
+            }
+        };
+        sequence.push(feedback);
+
+    <?php
+    }
+    ?>
+
+    var recapDifficileAssistance = {
+        type: jsPsychInstructions,
+        data: {
+            part: "recap",
+        },
+        pages: [
+            "<h3 class='mb-4'>Fin de la phase difficile</h3>" +
+            "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
+            "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
+            "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
+            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true,
+        on_load: function(data) {
+            var correct_count = jsPsych.data.get().filter({
+                part: "burger_difficile_assistance"
+            }).select('correct').sum();
+
+            var burger_count = jsPsych.data.get().filter({
+                part: "burger_difficile_assistance"
+            }).select('burgerID').count();
+
+            var tms = jsPsych.data.get().filter({
+                part: "burger_difficile_assistance"
+            }).select('rt').mean() / 1000;
+
+            $("#reuApp").text(correct_count);
+            $("#echApp").text(burger_count - correct_count);
+            $("#rtApp").text(tms);
+        },
+    };
+    sequence.push(recapDifficileAssistance);
+
+
+    jsPsych.run(sequence);
+</script>
+
+</html>

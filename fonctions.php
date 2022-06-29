@@ -19,6 +19,15 @@ function getIngredientsByDB($bdd, $nb, $bddName)
     return $data;
 }
 
+function getIngredientsAssCorrect($bdd, $nb)
+{
+    $req = $bdd->prepare("select * from assistance_correct limit " . $nb);
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}
+
 function getDataRT($bdd)
 {
     $req = $bdd->prepare("select participant, part, burgerID, rt from data_test where part = 'burger_apprentissage' or part = 'burger_facile' or part = 'burger_difficile'");
