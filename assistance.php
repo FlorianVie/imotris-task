@@ -130,7 +130,7 @@
             "<h2>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h2>" +
             "<p>Cette expérience est une phase de pré-test. Il est possible de rencontrer des bugs, si tel est le cas, merci de bien vouloir les faire remonter à l’expérimentateur à l’adresse suivante : <span class='font-monospace'>florian.vie@univ-ubs.fr</span></p>" +
             "<p>Les données enregistrées sont anonymes, il est donc important que vous notiez votre identifiant ci-dessus. Celui-ci permettra à l’expérimentateur de vous transmettre vos données ou de les supprimer si vous en faite la demande.</p>" +
-            "<p>L’expérience se déroule en trois phases. Une phase d’entrainement à la réalisation de commandes de burgers, une tâche facile et une tâche plus difficile.</p>" +
+            "<p>L’expérience se déroule en cinq phases. Une phase d’entrainement, une phase facile, une phase plus difficile, une phase facile avec un système d’assistance et une phase difficile avec un système d’assistance.</p>" +
             "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>",
         ],
         button_label_next: "Continuer",
@@ -169,10 +169,16 @@
             "<p>En haut, à gauche de l'interface, vous retrouverez votre score pour la phase expérimentale en cours.</p>" +
             "<p>Lorsque vous aurez fait correspondre la quantité d’ingrédients avec la commande, vous pourrez cliquer sur Envoyer la commande et passer à la suivante.</p>" +
             "<p>Une icône verte indiquera que vous avez correctement réalisé la commande, sinon l’icône sera rouge.</p>" +
-            "<p>Cliquez sur <i>Commencer</i> pour commencer la phase d'entrainement à la tâche</p>" +
+            "<p>Réalisez les commandes sans perdre de temps et le plus justement possible.</p>" +
+            "<p>Cliquez sur <i>Suivant</i> pour commencer la phase d'entrainement à la tâche</p>" +
+            "</div>",
+            "<div class='container'>" +
+            "<p>N'oubliez pas :</p>" +
+            "<p><strong>Réalisez les commandes le plus justement possible et sans perdre de temps.</strong>.</p>" +
+            "<p>Cliquez sur <i>Suivant</i> pour commencer la phase d'entrainement à la tâche</p>" +
             "</div>",
         ],
-        button_label_next: "Commencer",
+        button_label_next: "Suivant",
         button_label_previous: "Retour",
         show_clickable_nav: true
     };
@@ -419,7 +425,7 @@
             '<h1>Facile</h1>' +
             "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
             "<p>Cependant, dans cette phase, le temps vous sera réduit. Le programme a retenu le temps moyen dont vous avez besoin pour faire une commande.</p>" +
-            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en rajoutant quelques secondes.</p>" +
+            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en <strong>rajoutant</strong> quelques secondes.</p>" +
             "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
             "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
         ],
@@ -953,10 +959,10 @@
             part: "instructions",
         },
         pages: [
-            '<h1>Facile avec assistance</h1>' +
+            '<h1>Facile avec intelligence artificielle</h1>' +
             "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
-            "<p>Cependant, dans cette phase, le temps vous sera réduit. Le programme a retenu le temps moyen dont vous avez besoin pour faire une commande.</p>" +
-            "<p>Vous aurez donc une limite de temps pour chaque commande. Cette limite est établie sur votre temps moyen de réalisation de commande en rajoutant quelques secondes.</p>" +
+            "<p>Cette fois-ci, les ingrédients sont <strong>pré-remplis à l’aide d’une intelligence artificielle</strong>.</p>" +
+            "<p>La limite de temps pour chaque commande est établie sur votre temps moyen de réalisation de commande en <strong>rajoutant</strong> quelques secondes.</p>" +
             "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
             "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
         ],
@@ -1227,9 +1233,9 @@
             part: "instructions",
         },
         pages: [
-            '<h1>Difficile avec assistance</h1>' +
+            '<h1>Difficile avec intelligence artificielle</h1>' +
             "<p>Dans la phase qui suit, vous devez réaliser des commandes comme précédemment.</p>" +
-            "<p>Cependant, dans cette phase, le temps vous sera réduit considérablement.</p>" +
+            "<p>Cette fois-ci, les ingrédients sont <strong>pré-remplis à l’aide d’une intelligence artificielle</strong>.</p>" +
             "<p>La limite de temps pour chaque commande est établie sur votre temps moyen de réalisation de commande en <strong>retirant</strong> quelques secondes.</p>" +
             "<p>Vous devez donc, dans cette phase de l’expérience, <strong>réaliser les commandes le plus correctement possible dans le temps qui vous est affiché</strong> dans le minuteur.</p>" +
             "<p><i>Appuyez sur Continuer pour commencer à la phase suivante</i></p>",
