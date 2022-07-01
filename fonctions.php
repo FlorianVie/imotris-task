@@ -101,3 +101,12 @@ function getParticipants($bdd)
     $req->closeCursor();
     return $data;
 }
+
+function getDataPretest($bdd)
+{
+    $req = $bdd->prepare("select * from data_test");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}

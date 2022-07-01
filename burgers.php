@@ -9,34 +9,6 @@ shuffle($listeIngr);
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
-                    <h5>Score</h5>
-                </div>
-                <table class="table table-sm table-borderless table-hover">
-                    <thead>
-                        <tr>
-                            <th>Ratées</th>
-                            <th>Réussies</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span id="ratees">0</span></td>
-                            <td><span id="reussites">0</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <h3 class="mt-3 font-monospace">
-                <span id="timer">..:..</span>
-            </h3>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
                     <h5>Commande</h5>
                 </div>
                 <table class="table table-sm table-borderless table-hover">
@@ -75,6 +47,35 @@ shuffle($listeIngr);
                 </table>
             </div>
         </div>
+
+        <div class="col-md-3">
+            <h3 class="mt-3 font-monospace">
+                <span id="timer">..:..</span>
+            </h3>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Score</h5>
+                </div>
+                <table class="table table-sm table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ratées</th>
+                            <th>Réussies</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span id="ratees">0</span></td>
+                            <td><span id="reussites">0</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
 
