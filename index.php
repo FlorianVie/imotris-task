@@ -33,7 +33,54 @@
         <hr>
 
         <div class="row justify-content-center">
-            <div class="col-md-3 text-center">
+            <div class="col-md-4 text-center">
+                <h2>IMOTRIS</h2>
+
+                <form action="imotris.php" method="get">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Nb trials</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Apprentissage</td>
+                                <td><input type="number" name="a" class="form-control text-center" value="10" min="1"></td>
+                            </tr>
+                            <tr>
+                                <td>Facile</td>
+                                <td><input type="number" name="f" class="form-control text-center" value="10" min="1"></td>
+                            </tr>
+                            <tr>
+                                <td>Difficile</td>
+                                <td><input type="number" name="d" class="form-control text-center" value="10" min="1"></td>
+                            </tr>
+                            <tr>
+                                <td>Facile Assistance</td>
+                                <td><input type="number" name="fass" class="form-control text-center" value="10" min="1"></td>
+                            </tr>
+                            <tr>
+                                <td>Difficile Assistance</td>
+                                <td><input type="number" name="dass" class="form-control text-center" value="10" min="1"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button class="btn btn-primary">Pré-test</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
                 <h2>Pré-test Assistance</h2>
 
                 <form action="assistance.php" method="get">
@@ -75,33 +122,13 @@
 
             </div>
 
-            <div class="col-md-3 text-center">
-                <h2>Data</h2>
 
-                <form action="datap.php">
-
-                    <select class="form-select m-3" name="p" id="participants">
-                        <?php
-                        for ($i = 0; $i < count($participants); $i++) {
-                        ?>
-                            <option value="<?php echo $participants[$i]['participant'] ?>"><?php echo $participants[$i]['participant'] ?></option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-
-                    <button class="btn btn-secondary" disabled>Afficher données</button>
-                </form>
-
-
-
-            </div>
         </div>
 
         <hr>
 
         <div class="row justify-content-center">
-            <div class="col-md-3 text-center">
+            <div class="col-md-4 text-center">
                 <h2>Pré-test</h2>
 
                 <form action="pretest.php" method="get">
@@ -135,27 +162,7 @@
 
             </div>
 
-            <div class="col-md-3 text-center">
-                <h2>Data</h2>
 
-                <form action="datap.php">
-
-                    <select class="form-select m-3" name="p" id="participants">
-                        <?php
-                        for ($i = 0; $i < count($participants); $i++) {
-                        ?>
-                            <option value="<?php echo $participants[$i]['participant'] ?>"><?php echo $participants[$i]['participant'] ?></option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-
-                    <button class="btn btn-secondary" disabled>Afficher données</button>
-                </form>
-
-
-
-            </div>
         </div>
 
         <hr>

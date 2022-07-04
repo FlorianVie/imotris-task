@@ -17,6 +17,8 @@
     <script src="jspsych/plugin-instructions.js"></script>
     <script src="jspsych/plugin-call-function.js"></script>
     <script src="jspsych/plugin-survey-html-form.js"></script>
+    <script src="jspsych/plugin-survey-likert.js"></script>
+
 
 
 
@@ -48,11 +50,11 @@
 
     function saveData() {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
+        xhr.open('POST', 'write_data_imotris.php'); // change 'write_data.php' to point to php script.
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function() {
             if (xhr.status == 200) {
-                alert("Données transmises ! Merci beaucoup !");
+                alert("Données transmises, vous pouvez fermer l'onglet. Merci beaucoup !");
                 var response = JSON.parse(xhr.responseText);
                 console.log(response.success);
             }
@@ -98,7 +100,7 @@
 
     var jsPsych = initJsPsych({
         on_finish: function() {
-            jsPsych.data.displayData();
+            jsPsych.data.displayData('csv');
             console.log(jsPsych.data.get().csv());
             saveData(jsPsych.data.get().csv());
         }
@@ -143,21 +145,8 @@
             "<h2 class=''>Identifiant : <strong class='font-monospace'>" + participant_id + "</strong></h2>" +
             "<p>Nous vous remercions grandement pour l’intérêt que vous portez envers notre étude.</p>" +
             "<p>Veuillez <strong>noter et conserver l’identifiant</strong> qui d’affiche en haut de la page. C'est avec celui-ci que vous pourrez faire une demande de restitution et/ou de suppression de vos données.</p>" +
-            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>" +
-            "</div></div></div>",
-            "<div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start lh-sm'>" +
-            "<h3>Mise en contexte</h3>" +
-            "<p>Pour cette expérimentation, vous devrez vous mettre dans la peau d’un.e cuisinier.e dont la spécialité est la préparation de burgers. Dans le restaurant où vous travaillez, les clients peuvent choisir les ingrédients qui composent leur burger.</p>" +
-            "<p>Durant votre service, vous recevrez les commandes des clients une à une. Les commandes sont représentées par une liste d’ingrédients que les clients désirent. Grâce à l’interface prévue par le site web, vous simulerez la préparation de la commande dans un temps limité pour chacune d’entre elles.</p>" +
-            "<p><u>L'expérience se déroulera en 5 étapes</u> :</p>" +
-            "<ol>" +
-            "<li>Étape d'entrainement pour vous familiariser avec la tâche</li>" +
-            "<li>Étape facile</li>" +
-            "<li>Étape difficile</li>" +
-            "<li>Étape facile avec de l'aide</li>" +
-            "<li>Étape difficile avec de l'aide</li>" +
-            "</ol>" +
-            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>" +
+            "<p>L'expérience se compose d'un premier questionnaire suivi d'une tâche de recopiage d'informations et se termine par un autre questionnaire.</p>" +
+            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience vers le premier questionnaire.</p>" +
             "</div></div></div>",
         ],
         button_label_next: "Continuer",
@@ -174,7 +163,133 @@
     sequence.push(browser);
 
 
+    // ------------
+    // APTT & ATI
+    // ------------
 
+    <?php
+    $aptt = getAPTT($bdd);
+    $ati = getAIT($bdd);
+    ?>
+
+
+    var likert_scale = [
+        "Pas du tout d'accord",
+        "Pas d'accord",
+        "Ni en désaccord ni d'accord",
+        "D'accord",
+        "Tout à fait d'accord"
+    ];
+
+    var APTT = {
+        type: jsPsychSurveyLikert,
+        data: {
+            part: "APTT",
+        },
+        questions: [
+            <?php
+            for ($i = 0; $i < count($aptt); $i++) {
+            ?> {
+                    prompt: "<?php echo "<strong>" . $aptt[$i]['Item'] . "</strong>" ?>",
+                    name: "<?php echo $aptt[$i]['ID'] ?>",
+                    labels: likert_scale,
+                    required: true
+                },
+            <?php
+            }
+            ?>
+        ],
+        randomize_question_order: false,
+        on_finish: function(data) {
+            console.log("APTT", data.response);
+            data.APTT_1 = data.response.APTT_1;
+            data.APTT_2 = data.response.APTT_2;
+            data.APTT_3 = data.response.APTT_3;
+            data.APTT_4 = data.response.APTT_4;
+            data.APTT_5 = data.response.APTT_5;
+            data.APTT_6 = data.response.APTT_6;
+        },
+        preamble: `
+        <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
+        <h3 class='mt-4'>Questionnaire n°1</h3>
+        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
+        <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
+        <hr></div></div></div>
+        `
+    };
+    sequence.push(APTT)
+
+
+    var ATI = {
+        type: jsPsychSurveyLikert,
+        data: {
+            part: "ATI",
+        },
+        questions: [
+            <?php
+            for ($i = 0; $i < count($ati); $i++) {
+            ?> {
+                    prompt: "<?php echo "<strong>" . $ati[$i]['Item'] . "</strong>" ?>",
+                    name: "<?php echo $ati[$i]['ID'] ?>",
+                    labels: likert_scale,
+                    required: true
+                },
+            <?php
+            }
+            ?>
+        ],
+        randomize_question_order: false,
+        on_finish: function(data) {
+            console.log("ATI", data.response);
+            data.ATI_1 = data.response.ATI_1;
+            data.ATI_2 = data.response.ATI_2;
+            data.ATI_3 = data.response.ATI_3;
+            data.ATI_4 = data.response.ATI_4;
+            data.ATI_5 = data.response.ATI_5;
+            data.ATI_6 = data.response.ATI_6;
+            data.ATI_7 = data.response.ATI_7;
+            data.ATI_8 = data.response.ATI_8;
+            data.ATI_9 = data.response.ATI_9;
+        },
+        preamble: `
+        <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
+        <h3 class='mt-4'>Questionnaire n°2</h3>
+        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
+        <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
+        <hr></div></div></div>
+        `
+    };
+    sequence.push(ATI)
+
+
+
+
+    var instructionsPretache = {
+        type: jsPsychInstructions,
+        data: {
+            part: "instructions",
+        },
+        pages: [
+            "<div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start lh-sm'>" +
+            "<h3 class='mt-4'>Mise en contexte</h3>" +
+            "<p>Pour l'expérimentation à suivre, vous devrez vous mettre dans la peau d’un.e cuisinier.e dont la spécialité est la préparation de burgers. Dans le restaurant où vous travaillez, les clients peuvent choisir les ingrédients qui composent leur burger.</p>" +
+            "<p>Durant votre service, vous recevrez les commandes des clients une à une. Les commandes sont représentées par une liste d’ingrédients que les clients désirent. Grâce à l’interface prévue par le site web, vous simulerez la préparation de la commande dans un temps limité pour chacune d’entre elles.</p>" +
+            "<hr><p><u>L'expérience se déroulera en 5 étapes</u> :</p>" +
+            "<ol>" +
+            "<li>Étape d'entrainement pour vous familiariser avec la tâche</li>" +
+            "<li>Étape facile</li>" +
+            "<li>Étape difficile</li>" +
+            "<li>Étape facile avec de l'aide</li>" +
+            "<li>Étape difficile avec de l'aide</li>" +
+            "</ol>" +
+            "<p>Cliquez sur <i>continuer</i> pour poursuivre l'expérience.</p>" +
+            "</div></div></div>",
+        ],
+        button_label_next: "Continuer",
+        button_label_previous: "Retour",
+        show_clickable_nav: true
+    };
+    sequence.push(instructionsPretache);
 
     // ------------
     // ENTRAINEMENT
@@ -356,7 +471,7 @@
 
             },
             on_finish: function(data) {
-                data.stimulus = "5 ingredients";
+                data.stimulus = "6 ingredients";
 
                 if (data.rt != null) {
                     if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
@@ -630,7 +745,7 @@
 
             },
             on_finish: function(data) {
-                data.stimulus = "5 ingredients";
+                data.stimulus = "6 ingredients";
 
                 if (data.rt != null) {
                     if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
@@ -904,7 +1019,7 @@
 
             },
             on_finish: function(data) {
-                data.stimulus = "5 ingredients";
+                data.stimulus = "6 ingredients";
 
                 if (data.rt != null) {
                     if (data.salade == data.salade_nb && data.tomate == data.tomate_nb && data.fromage == data.fromage_nb && data.viande == data.viande_nb && data.oignon == data.oignon_nb && data.poivron == data.poivron_nb) {
@@ -1523,7 +1638,7 @@
             "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
             "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
             "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
-            "<p><i>Appuyez sur Continuer pour passer à la phase suivante</i></p>",
+            "<p><i>Appuyez sur Continuer pour continuer vers le dernier questionnaire</i></p>",
         ],
         button_label_next: "Continuer",
         button_label_previous: "Retour",
@@ -1547,6 +1662,85 @@
         },
     };
     sequence.push(recapDifficileAssistance);
+
+
+    // ------------
+    // IMOTRIS
+    // ------------
+
+    <?php
+    $imotris = getIMOTRIS($bdd);
+    ?>
+
+
+    var likert_scale_imotris = [
+        "Pas du tout d'accord",
+        "Pas d'accord",
+        "Ni en désaccord ni d'accord",
+        "D'accord",
+        "Tout à fait d'accord"
+    ];
+
+    var IMOTRIS = {
+        type: jsPsychSurveyLikert,
+        data: {
+            part: "IMOTRIS",
+        },
+        questions: [
+            <?php
+            for ($i = 0; $i < count($imotris); $i++) {
+            ?> {
+                    prompt: "<?php echo "<strong>" . $imotris[$i]['Item'] . "</strong>" ?>",
+                    name: "<?php echo $imotris[$i]['ID'] ?>",
+                    labels: likert_scale_imotris,
+                    required: true
+                },
+            <?php
+            }
+            ?>
+        ],
+        randomize_question_order: false,
+        on_finish: function(data) {
+            console.log("IMOTRIS", data.response);
+            data.IMOT_1 = data.response.IMOT_1;
+            data.IMOT_2 = data.response.IMOT_2;
+            data.IMOT_3 = data.response.IMOT_3;
+            data.IMOT_4 = data.response.IMOT_4;
+            data.RIS_1 = data.response.RIS_1;
+            data.RIS_2 = data.response.RIS_2;
+            data.RIS_3 = data.response.RIS_3;
+            data.RIS_4 = data.response.RIS_4;
+            data.RIS_5 = data.response.RIS_5;
+            data.RIS_6 = data.response.RIS_6;
+        },
+        preamble: `
+        <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
+        <h3 class='mt-4'>Questionnaire n°3</h3>
+        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
+        <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
+        <hr></div></div></div>
+        `
+    };
+    sequence.push(IMOTRIS)
+
+
+
+    var consent = {
+        type: jsPsychSurveyHtmlForm,
+        data: {
+            part: "fin",
+        },
+        preamble: '',
+        html: `<?php include 'assets/ending.php'; ?>`,
+        button_label: "Envoyer les données à l'expérimentateur",
+        on_finish: function(data) {
+            data.mail = data.response.mail;
+        },
+        show_clickable_nav: true
+    };
+    sequence.push(consent);
+
+
 
 
     jsPsych.run(sequence);

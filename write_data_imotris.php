@@ -1,7 +1,7 @@
 <?php
 
 // this path should point to your configuration file.
-include('database_config_test.php');
+include('database_config_imotris.php');
 
 $data_array = json_decode(file_get_contents('php://input'), true);
 

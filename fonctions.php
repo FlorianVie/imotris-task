@@ -110,3 +110,30 @@ function getDataPretest($bdd)
     $req->closeCursor();
     return $data;
 }
+
+function getAPTT($bdd)
+{
+    $req = $bdd->prepare("select * from Questionnaire_APTT");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}
+
+function getAIT($bdd)
+{
+    $req = $bdd->prepare("select * from Questionnaire_ATI");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}
+
+function getIMOTRIS($bdd)
+{
+    $req = $bdd->prepare("select * from Questionnaire_IMOTRIS");
+    $req->execute();
+    $data = $req->fetchAll();
+    $req->closeCursor();
+    return $data;
+}

@@ -3,6 +3,8 @@
         <div class="col-md-8 text-start fs-6 lh-sm">
             <h3 class="text-center mt-3 mb-2">Adaptation et validation d’un outil psychométrique évaluant la confiance envers un agent autonome</h3>
 
+            <hr>
+
             <h4>Promoteur</h4>
             <p>Université Bretagne Sud</p>
 
