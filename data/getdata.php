@@ -1,9 +1,10 @@
 <?php
+
 include '../fonctions.php';
 $bdd = getBD();
-$data = getDataPretest($bdd);
+$data = getDataAll($bdd);
 #print_r($data);
 header('Content-Type: application/json');
 
 $dataJ = json_encode($data);
-print_r($dataJ);
+echo $dataJ;
