@@ -76,11 +76,35 @@
     include "fonctions.php";
     $bdd = getBD();
 
-    $nbApp = $_GET['a'];
-    $nbFac = $_GET['f'];
-    $nbDif = $_GET['d'];
-    $nbFacAss = $_GET['fass'];
-    $nbDifAss = $_GET['dass'];
+    if (isset($_GET['a'])) {
+        $nbApp = $_GET['a'];
+    } else {
+        $nbApp = 10;
+    }
+
+    if (isset($_GET['f'])) {
+        $nbFac = $_GET['f'];
+    } else {
+        $nbFac = 10;
+    }
+
+    if (isset($_GET['d'])) {
+        $nbDif = $_GET['d'];
+    } else {
+        $nbDif = 10;
+    }
+
+    if (isset($_GET['fass'])) {
+        $nbFacAss = $_GET['fass'];
+    } else {
+        $nbFacAss = 10;
+    }
+
+    if (isset($_GET['dass'])) {
+        $nbDifAss = $_GET['dass'];
+    } else {
+        $nbDifAss = 10;
+    }
 
     $ingr_app = getIngredientsByDB($bdd, $nbApp, "Pretest_apprentissage");
     $ingr_fac = getIngredientsByDB($bdd, $nbFac, "Pretest_facile");
@@ -100,7 +124,7 @@
 
     var jsPsych = initJsPsych({
         on_finish: function() {
-            jsPsych.data.displayData('csv');
+            //jsPsych.data.displayData('csv');
             console.log(jsPsych.data.get().csv());
             saveData(jsPsych.data.get().csv());
         }
@@ -181,6 +205,15 @@
         "Tout à fait d'accord"
     ];
 
+    var likert_scale_6 = [
+        "Pas du tout d'accord",
+        "Pas d'accord",
+        "Pas tout à fait d'accord",
+        "Un peu d'accord",
+        "D'accord",
+        "Tout à fait d'accord"
+    ];
+
     var APTT = {
         type: jsPsychSurveyLikert,
         data: {
@@ -231,7 +264,7 @@
             ?> {
                     prompt: "<?php echo "<strong>" . $ati[$i]['Item'] . "</strong>" ?>",
                     name: "<?php echo $ati[$i]['ID'] ?>",
-                    labels: likert_scale,
+                    labels: likert_scale_6,
                     required: true
                 },
             <?php
