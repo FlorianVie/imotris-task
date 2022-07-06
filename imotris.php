@@ -1752,7 +1752,7 @@
         preamble: `
         <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
         <h3 class='mt-4'>Questionnaire n°3</h3>
-        <p>Le questionnaire ci-dessous porte sur votre expérience passée précédemment avec le robot préparateur de burgers nommé Cobot.</p>
+        <p>Le questionnaire ci-dessous porte sur votre <strong>expérience passée précédemment avec le robot préparateur de burgers nommé Cobot</strong>.</p>
         <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
         <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
         <hr></div></div></div>
