@@ -20,156 +20,183 @@
     include 'fonctions.php';
     $bdd = getBD();
     $p = $_GET['p'];
-    $data = getDataP($bdd, $p);
-    $dataApp = getDataPApp($bdd, $p);
-    $dataFac = getDataPFac($bdd, $p);
-    $dataDif = getDataPDif($bdd, $p);
-    $dataMean = getDataPMean($bdd, $p);
+    $perf = getPerfP($bdd, $p);
+    $rtApp = getRTappP($bdd, $p);
+    $rtFac = getRTfacP($bdd, $p);
+    $rtFacass = getRTfacassP($bdd, $p);
+    $rtDif = getRTdifP($bdd, $p);
+    $rtDifass = getRTdifassP($bdd, $p);
     ?>
 
-    <script>
-        // Temps de réponse
 
-        const labels_rt = [
-            <?php
-            for ($i = 0; $i < count($dataApp); $i++) {
-                echo "'" . $dataApp[$i]['burgerID'] . "',";
-            }
-            ?>
-        ];
-
-        const data_rt = {
-            labels: labels_rt,
-            datasets: [{
-                    label: 'Apprentissage',
-                    backgroundColor: 'rgb(209, 175, 148)',
-                    borderColor: 'rgb(209, 175, 148)',
-                    data: [
-                        <?php
-                        for ($i = 0; $i < count($dataApp); $i++) {
-                            echo "'" . $dataApp[$i]['rt'] . "',";
-                        }
-                        ?>
-                    ],
-                },
-                {
-                    label: 'Facile',
-                    backgroundColor: 'rgb(83, 134, 228)',
-                    borderColor: 'rgb(83, 134, 228)',
-                    data: [
-                        <?php
-                        for ($i = 0; $i < count($dataFac); $i++) {
-                            echo "'" . $dataFac[$i]['rt'] . "',";
-                        }
-                        ?>
-                    ],
-                },
-                {
-                    label: 'Difficile',
-                    backgroundColor: 'rgb(238, 46, 49)',
-                    borderColor: 'rgb(238, 46, 49)',
-                    data: [
-                        <?php
-                        for ($i = 0; $i < count($dataDif); $i++) {
-                            echo "'" . $dataDif[$i]['rt'] . "',";
-                        }
-                        ?>
-                    ],
-                }
-            ]
-        };
-
-        const config_rt = {
-            type: 'line',
-            data: data_rt,
-            options: {
-                scales: {
-                    y: {
-                        suggestedMin: 0,
-                    }
-                }
-            }
-        };
-
-
-
-        // Performance
-
-        const labels_perf = ["Phases"];
-
-        const data_perf = {
-            labels: labels_perf,
-            datasets: [{
-                    label: 'Apprentissage',
-                    backgroundColor: 'rgb(209, 175, 148)',
-                    borderColor: 'rgb(209, 175, 148)',
-                    data: [<?php echo "'" . $dataMean[0]['score'] . "'," ?>],
-                },
-                {
-                    label: 'Facile',
-                    backgroundColor: 'rgb(83, 134, 228)',
-                    borderColor: 'rgb(83, 134, 228)',
-                    data: [<?php echo "'" . $dataMean[2]['score'] . "'," ?>],
-                },
-                {
-                    label: 'Difficile',
-                    backgroundColor: 'rgb(238, 46, 49)',
-                    borderColor: 'rgb(238, 46, 49)',
-                    data: [<?php echo "'" . $dataMean[1]['score'] . "'," ?>],
-                }
-            ]
-        };
-
-        const config_perf = {
-            type: 'bar',
-            data: data_perf,
-            options: {
-                scales: {
-                    y: {
-                        suggestedMin: 0,
-                        suggestedMax: 1
-                    }
-                }
-            }
-        };
-    </script>
 
 
     <div class="container">
         <div class="row">
-            <div class="col text-center">
-                <h1><?php echo $p ?></h1>
+            <div class="col text-center mt-4">
+                <h1>Votre identifiant : <span class="font-monospace"><?php echo $p ?></span></h1>
             </div>
         </div>
 
 
-        <div class="row mt-4">
-
-            <div class="col-md-6">
-                <h2>Temps de réponse</h2>
-                <canvas id="rtPart"></canvas>
-                <script>
-                    const rtChart = new Chart(
-                        document.getElementById('rtPart'),
-                        config_rt
-                    );
-                </script>
-
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="card m-1">
+                    <div class="card-header fs-4">
+                        Performance
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Étape</th>
+                                    <th>Précision</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Entrainement</td>
+                                    <td><?php echo $perf[0]["score"] * 100 ?> %</td>
+                                </tr>
+                                <tr>
+                                    <td>Facile</td>
+                                    <td><?php echo $perf[3]["score"] * 100 ?> %</td>
+                                </tr>
+                                <tr>
+                                    <td>Facile avec Cobot</td>
+                                    <td><?php echo $perf[4]["score"] * 100 ?> %</td>
+                                </tr>
+                                <tr>
+                                    <td>Difficile</td>
+                                    <td><?php echo $perf[1]["score"] * 100 ?> %</td>
+                                </tr>
+                                <tr>
+                                    <td>Difficile avec Cobot</td>
+                                    <td><?php echo $perf[2]["score"] * 100 ?> %</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <h2>Performance</h2>
-                <canvas id="perfPart"></canvas>
-                <script>
-                    const perfChart = new Chart(
-                        document.getElementById('perfPart'),
-                        config_perf
-                    );
-                </script>
+            <div class="col-md-5">
+                <div class="card m-1">
+                    <div class="card-header fs-4">
+                        Temps de réponse (en secondes)
+                    </div>
+                    <div class="card-body">
+                        <canvas height="200px" id="rtChart"></canvas>
+                    </div>
+                    <div class="card-footer text-muted">
+                            Vous pouvez afficher/masquer les courbes en cliquant sur leurs étiquettes au dessus du graphe
+                        </div>
+                </div>
             </div>
-
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr>
+                <p>
+                    Contact : <a href="mailto:florian.vie@univ-ubs.fr">florian.vie@univ-ubs.fr</a>
+                </p>
+            </div>
         </div>
     </div>
+
+
+    <script>
+        const labels = [
+            <?php
+            for ($i = 0; $i < count($rtApp); $i++) {
+                echo "'" . $rtApp[$i]['burgerID'] . "',";
+            }
+            ?>
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                    label: 'Entrainement',
+                    backgroundColor: 'rgb(87, 117, 144)',
+                    borderColor: 'rgb(87, 117, 144)',
+                    hidden: true,
+                    data: [
+                        <?php
+                        for ($i = 0; $i < count($rtApp); $i++) {
+                            echo ($rtApp[$i]['rt'] / 1000) . ",";
+                        }
+                        ?>
+                    ],
+                },
+                {
+                    label: 'Facile',
+                    backgroundColor: 'rgb(144, 190, 109)',
+                    borderColor: 'rgb(144, 190, 109)',
+                    data: [
+                        <?php
+                        for ($i = 0; $i < count($rtFac); $i++) {
+                            echo ($rtFac[$i]['rt'] / 1000) . ",";
+                        }
+                        ?>
+                    ],
+                },
+                {
+                    label: 'Facile Cobot',
+                    backgroundColor: 'rgb(67, 170, 139)',
+                    borderColor: 'rgb(67, 170, 139)',
+                    hidden: true,
+                    data: [
+                        <?php
+                        for ($i = 0; $i < count($rtFacass); $i++) {
+                            echo ($rtFacass[$i]['rt'] / 1000) . ",";
+                        }
+                        ?>
+                    ],
+                },
+                {
+                    label: 'Difficile',
+                    backgroundColor: 'rgb(248, 150, 30)',
+                    borderColor: 'rgb(248, 150, 30)',
+                    data: [
+                        <?php
+                        for ($i = 0; $i < count($rtDif); $i++) {
+                            echo ($rtDif[$i]['rt'] / 1000) . ",";
+                        }
+                        ?>
+                    ],
+                },
+                {
+                    label: 'Difficile Cobot',
+                    backgroundColor: 'rgb(243, 114, 44)',
+                    borderColor: 'rgb(243, 114, 44)',
+                    hidden: true,
+                    data: [
+                        <?php
+                        for ($i = 0; $i < count($rtDifass); $i++) {
+                            echo ($rtDifass[$i]['rt'] / 1000) . ",";
+                        }
+                        ?>
+                    ],
+                },
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+    </script>
+
+    <script>
+        const myChart = new Chart(
+            document.getElementById('rtChart'),
+            config
+        );
+    </script>
+
+
 
 </body>
 
