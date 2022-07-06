@@ -48,18 +48,23 @@
         }, 1000);
     }
 
-    function saveData() {
+    function saveData(id) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'write_data_imotris.php'); // change 'write_data.php' to point to php script.
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function() {
             if (xhr.status == 200) {
-                alert("Données transmises, vous pouvez fermer l'onglet. Merci beaucoup !");
+                alert("Données transmises, la page va être redirigée pour afficher vos résultats.");
+                window.location.href = "datap.php?p=" + id;
                 var response = JSON.parse(xhr.responseText);
                 console.log(response.success);
             }
         };
         xhr.send(jsPsych.data.get().json());
+    }
+
+    function toDatap(id) {
+        window.location.href = "datap.php?p=" + id;
     }
 </script>
 
@@ -125,8 +130,8 @@
     var jsPsych = initJsPsych({
         on_finish: function() {
             //jsPsych.data.displayData('csv');
-            console.log(jsPsych.data.get().csv());
-            saveData(jsPsych.data.get().csv());
+            //console.log(jsPsych.data.get().csv());
+            saveData(participant_id);
         }
     });
 
