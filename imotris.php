@@ -216,6 +216,7 @@
 
     var APTT = {
         type: jsPsychSurveyLikert,
+        button_label: "Continuer",
         data: {
             part: "APTT",
         },
@@ -255,6 +256,7 @@
 
     var ATI = {
         type: jsPsychSurveyLikert,
+        button_label: "Continuer",
         data: {
             part: "ATI",
         },
@@ -1150,7 +1152,7 @@
             "<p>Durant cette étape, vous devrez réaliser des commandes de la même façon que précedemment.</p>" +
             "<p>Lors de la phase d’entraînement nous avons retenu votre temps moyen. Celui-ci sera donc <strong>augmenté</strong> pour cette étape de préparation facile.</p>" +
             "<p>Pour chaque commande vous aurez un temps limité pour répondre.</p>" +
-            "<p>Cette fois-ci, <strong>une intelligence artificielle dénommée Cobot vous assistera en pré-remplissant les ingrédients</strong> de la commande.</p>" +
+            "<p>Cette fois-ci, <strong>un robot préparateur de commandes dénommé Cobot vous assistera en pré-remplissant les ingrédients</strong> de la commande.</p>" +
             "<p>N’oubliez pas, vous devrez réaliser ces différentes commandes sans vous tromper et le plus rapidement possible</p>" +
             "<p><i>Appuyez sur Continuer pour commencer à l'étape suivante</i></p>" +
             "</div></div></div>",
@@ -1431,7 +1433,7 @@
             "<p>Durant cette étape, vous devrez réaliser des commandes de la même façon que précedemment.</p>" +
             "<p>Lors de la phase d’entraînement nous avons retenu votre temps moyen. Celui-ci sera donc <strong>réduit</strong> pour cette étape de préparation difficile.</p>" +
             "<p>Pour chaque commande vous aurez un temps limité pour répondre.</p>" +
-            "<p>Cette fois-ci, <strong>l'intelligence artificielle Cobot vous assistera en pré-remplissant les ingrédients</strong> de la commande.</p>" +
+            "<p>Cette fois-ci, <strong>un robot préparateur de commandes dénommé Cobot vous assistera en pré-remplissant les ingrédients</strong> de la commande.</p>" +
             "<p>N’oubliez pas, vous devrez réaliser ces différentes commandes sans vous tromper et le plus rapidement possible</p>" +
             "<p><i>Appuyez sur Continuer pour commencer à l'étape suivante</i></p>" +
             "</div></div></div>",
@@ -1716,6 +1718,7 @@
 
     var IMOTRIS = {
         type: jsPsychSurveyLikert,
+        button_label: "Continuer",
         data: {
             part: "IMOTRIS",
         },
@@ -1749,6 +1752,7 @@
         preamble: `
         <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
         <h3 class='mt-4'>Questionnaire n°3</h3>
+        <p>Le questionnaire ci-dessous porte sur votre expérience passée précédemment avec le robot préparateur de burgers nommé Cobot.</p>
         <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
         <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
         <hr></div></div></div>

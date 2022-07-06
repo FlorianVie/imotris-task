@@ -11,7 +11,7 @@
 
             <p>
             <div class="mb-3">
-                <label for="mail" class="form-label">Adresse mail</label>
+                <label for="mail" class="form-label">Adresse mail :</label>
                 <input type="email" class="form-control" id="m" name="mail">
             </div>
             </p>
