@@ -191,6 +191,17 @@
             data.RIS_4 = data.response.RIS_4;
             data.RIS_5 = data.response.RIS_5;
             data.RIS_6 = data.response.RIS_6;
+
+            data.IMOT_1_comp = data.response.IMOT_1_comp;
+            data.IMOT_2_comp = data.response.IMOT_2_comp;
+            data.IMOT_3_comp = data.response.IMOT_3_comp;
+            data.IMOT_4_comp = data.response.IMOT_4_comp;
+            data.RIS_1_comp = data.response.RIS_1_comp;
+            data.RIS_2_comp = data.response.RIS_2_comp;
+            data.RIS_3_comp = data.response.RIS_3_comp;
+            data.RIS_4_comp = data.response.RIS_4_comp;
+            data.RIS_5_comp = data.response.RIS_5_comp;
+            data.RIS_6_comp = data.response.RIS_6_comp;
         },
         preamble: `
         <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
