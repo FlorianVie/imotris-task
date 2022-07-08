@@ -118,22 +118,20 @@
     $ingr_fass_correct = getIngredientsByDB($bdd, $nbFacAss, "assistance_facile_correct");
     $ingr_dass = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile");
     $ingr_dass_correct = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile_correct");
-
-    $imotris = getIMOTRIS($bdd);
     ?>
 
 </body>
 
 <script>
     var temps_feedback = 750;
-    var temps_burger = 25 * 1000;
-    var modif_temps = 0.15;
+    var temps_burger = 45 * 1000;
+    var modif_temps = 0.25;
 
     var jsPsych = initJsPsych({
         on_finish: function() {
-            jsPsych.data.displayData('csv');
+            //jsPsych.data.displayData('csv');
             //console.log(jsPsych.data.get().csv());
-            //saveData(participant_id);
+            saveData(participant_id);
         }
     });
 
@@ -164,62 +162,6 @@
         show_clickable_nav: true
     };
     sequence.push(consent);
-
-
-
-
-
-
-
-    var IMOTRIS = {
-        type: jsPsychSurveyHtmlForm,
-        button_label: "Continuer",
-        data: {
-            part: "IMOTRIS",
-        },
-        html: `<?php include 'assets/imotris_questionnaire.php' ?>`,
-        randomize_question_order: false,
-        on_finish: function(data) {
-            console.log("IMOTRIS", data.response);
-            data.IMOT_1 = data.response.IMOT_1;
-            data.IMOT_2 = data.response.IMOT_2;
-            data.IMOT_3 = data.response.IMOT_3;
-            data.IMOT_4 = data.response.IMOT_4;
-            data.RIS_1 = data.response.RIS_1;
-            data.RIS_2 = data.response.RIS_2;
-            data.RIS_3 = data.response.RIS_3;
-            data.RIS_4 = data.response.RIS_4;
-            data.RIS_5 = data.response.RIS_5;
-            data.RIS_6 = data.response.RIS_6;
-
-            data.IMOT_1_comp = data.response.IMOT_1_comp;
-            data.IMOT_2_comp = data.response.IMOT_2_comp;
-            data.IMOT_3_comp = data.response.IMOT_3_comp;
-            data.IMOT_4_comp = data.response.IMOT_4_comp;
-            data.RIS_1_comp = data.response.RIS_1_comp;
-            data.RIS_2_comp = data.response.RIS_2_comp;
-            data.RIS_3_comp = data.response.RIS_3_comp;
-            data.RIS_4_comp = data.response.RIS_4_comp;
-            data.RIS_5_comp = data.response.RIS_5_comp;
-            data.RIS_6_comp = data.response.RIS_6_comp;
-        },
-        preamble: `
-        <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
-        <h3 class='mt-4'>Questionnaire n°3</h3>
-        <p>Le questionnaire ci-dessous porte sur votre <strong>expérience passée précédemment avec le robot préparateur de burgers nommé Cobot</strong>.</p>
-        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
-        <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
-        </div></div></div>
-        `
-    };
-    sequence.push(IMOTRIS);
-
-
-
-
-
-
-
 
 
     var instructionsGenerales = {

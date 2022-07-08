@@ -149,7 +149,7 @@ function getIMOTRIS($bdd)
 
 function getPerfP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, avg(correct) as score from Data where participant = :id and correct is not null group by part");
+    $req = $bdd->prepare("select participant, part, avg(correct) as score from data_campagne_1 where participant = :id and correct is not null group by part");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();
@@ -159,7 +159,7 @@ function getPerfP($bdd, $id)
 
 function getRTappP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, burgerID, rt from Data where burgerID is not null and participant = :id and part = 'burger_apprentissage'");
+    $req = $bdd->prepare("select participant, part, burgerID, rt from data_campagne_1 where burgerID is not null and participant = :id and part = 'burger_apprentissage'");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();
@@ -169,7 +169,7 @@ function getRTappP($bdd, $id)
 
 function getRTfacP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, burgerID, rt from Data where burgerID is not null and participant = :id and part = 'burger_facile'");
+    $req = $bdd->prepare("select participant, part, burgerID, rt from data_campagne_1 where burgerID is not null and participant = :id and part = 'burger_facile'");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();
@@ -179,7 +179,7 @@ function getRTfacP($bdd, $id)
 
 function getRTfacassP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, burgerID, rt from Data where burgerID is not null and participant = :id and part = 'burger_facile_assistance'");
+    $req = $bdd->prepare("select participant, part, burgerID, rt from data_campagne_1 where burgerID is not null and participant = :id and part = 'burger_facile_assistance'");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();
@@ -189,7 +189,7 @@ function getRTfacassP($bdd, $id)
 
 function getRTdifP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, burgerID, rt from Data where burgerID is not null and participant = :id and part = 'burger_difficile'");
+    $req = $bdd->prepare("select participant, part, burgerID, rt from data_campagne_1 where burgerID is not null and participant = :id and part = 'burger_difficile'");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();
@@ -199,7 +199,7 @@ function getRTdifP($bdd, $id)
 
 function getRTdifassP($bdd, $id)
 {
-    $req = $bdd->prepare("select participant, part, burgerID, rt from Data where burgerID is not null and participant = :id and part = 'burger_difficile_assistance'");
+    $req = $bdd->prepare("select participant, part, burgerID, rt from data_campagne_1 where burgerID is not null and participant = :id and part = 'burger_difficile_assistance'");
     $req->bindParam(':id', $id);
     $req->execute();
     $data = $req->fetchAll();

@@ -50,7 +50,7 @@
 
     function saveData(id) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data_imotris.php'); // change 'write_data.php' to point to php script.
+        xhr.open('POST', 'write_data_task.php'); // change 'write_data.php' to point to php script.
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function() {
             if (xhr.status == 200) {
@@ -118,14 +118,17 @@
     $ingr_fass_correct = getIngredientsByDB($bdd, $nbFacAss, "assistance_facile_correct");
     $ingr_dass = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile");
     $ingr_dass_correct = getIngredientsByDB($bdd, $nbDifAss, "assistance_difficile_correct");
+
+    $imotris = getIMOTRIS($bdd);
     ?>
 
 </body>
 
 <script>
     var temps_feedback = 750;
-    var temps_burger = 45 * 1000;
-    var modif_temps = 0.25;
+    var temps_burger = 25 * 1000;
+    var modif_temps = 0.15;
+    var modif_temps_f = 0.25;
 
     var jsPsych = initJsPsych({
         on_finish: function() {
@@ -645,7 +648,7 @@
                     part: "burger_apprentissage"
                 }).select('rt').mean();
                 data.rt_mean = tm;
-                tms = tm + tm * modif_temps;
+                tms = tm + tm * modif_temps_f;
                 //console.log(data.rt, tms);
                 jsPsych.current_trial.trial_duration = tms;
             },
@@ -656,9 +659,9 @@
                     part: "burger_apprentissage"
                 }).select('rt').mean() / 1000;
 
-                startTimer(tms + tms * modif_temps, $("#timer"));
+                startTimer(tms + tms * modif_temps_f, $("#timer"));
 
-                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps, $("#timer");
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps_f, $("#timer");
 
 
                 // Compteurs score
@@ -804,7 +807,7 @@
                 }).select('rt').mean();
                 data.rt_mean = tm;
                 console.log("rt :", data.rt);
-                console.log("Temps moyen :", tm + tm * modif_temps)
+                console.log("Temps moyen :", tm + tm * modif_temps_f)
             }
         };
         sequence.push(burger_facile);
@@ -1195,7 +1198,7 @@
                     part: "burger_apprentissage"
                 }).select('rt').mean();
                 data.rt_mean = tm;
-                tms = tm + tm * modif_temps;
+                tms = tm + tm * modif_temps_f;
                 //console.log(data.rt, tms);
                 jsPsych.current_trial.trial_duration = tms;
             },
@@ -1206,9 +1209,9 @@
                     part: "burger_apprentissage"
                 }).select('rt').mean() / 1000;
 
-                startTimer(tms + tms * modif_temps, $("#timer"));
+                startTimer(tms + tms * modif_temps_f, $("#timer"));
 
-                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps, $("#timer");
+                jsPsych.data.jsPsych.current_trial.data.timeout_burger = tms + tms * modif_temps_f, $("#timer");
 
 
                 // Compteurs score
@@ -1360,7 +1363,7 @@
                 }).select('rt').mean();
                 data.rt_mean = tm;
                 console.log("rt :", data.rt);
-                console.log("Temps moyen :", tm + tm * modif_temps)
+                console.log("Temps moyen :", tm + tm * modif_temps_f)
             }
         };
         sequence.push(burger_facile_ass);
@@ -1722,24 +1725,12 @@
     ];
 
     var IMOTRIS = {
-        type: jsPsychSurveyLikert,
+        type: jsPsychSurveyHtmlForm,
         button_label: "Continuer",
         data: {
             part: "IMOTRIS",
         },
-        questions: [
-            <?php
-            for ($i = 0; $i < count($imotris); $i++) {
-            ?> {
-                    prompt: "<?php echo "<strong>" . $imotris[$i]['Item'] . "</strong>" ?>",
-                    name: "<?php echo $imotris[$i]['ID'] ?>",
-                    labels: likert_scale_imotris,
-                    required: true
-                },
-            <?php
-            }
-            ?>
-        ],
+        html: `<?php include 'assets/imotris_questionnaire.php' ?>`,
         randomize_question_order: false,
         on_finish: function(data) {
             console.log("IMOTRIS", data.response);
@@ -1753,17 +1744,31 @@
             data.RIS_4 = data.response.RIS_4;
             data.RIS_5 = data.response.RIS_5;
             data.RIS_6 = data.response.RIS_6;
+
+            data.IMOT_1_comp = data.response.IMOT_1_comp;
+            data.IMOT_2_comp = data.response.IMOT_2_comp;
+            data.IMOT_3_comp = data.response.IMOT_3_comp;
+            data.IMOT_4_comp = data.response.IMOT_4_comp;
+            data.RIS_1_comp = data.response.RIS_1_comp;
+            data.RIS_2_comp = data.response.RIS_2_comp;
+            data.RIS_3_comp = data.response.RIS_3_comp;
+            data.RIS_4_comp = data.response.RIS_4_comp;
+            data.RIS_5_comp = data.response.RIS_5_comp;
+            data.RIS_6_comp = data.response.RIS_6_comp;
+
+            data.commentaire = data.response.commentaire;
         },
         preamble: `
         <div class='container'><div class='row justify-content-center'><div class='col-md-8 text-start fs-6 lh-sm'>
         <h3 class='mt-4'>Questionnaire n°3</h3>
         <p>Le questionnaire ci-dessous porte sur votre <strong>expérience passée précédemment avec le robot préparateur de burgers nommé Cobot</strong>.</p>
-        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient</p>
+        <p>Vous devez lire chaque affirmation du questionnaire et, selon votre degré d'accord avec celle-ci, vous devez cocher le choix qui vous convient.</p>
+        <p>À chaque affirmation est associée un curseur dans lequel vous devez régler votre degré de compréhension.</p>
         <p>Il est important d'exprimer sincèrement vos opinions pour la fiabilité de l'étude.</p>
-        <hr></div></div></div>
+        </div></div></div>
         `
     };
-    sequence.push(IMOTRIS)
+    sequence.push(IMOTRIS);
 
 
 

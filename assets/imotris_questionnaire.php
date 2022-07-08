@@ -63,7 +63,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR1" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR1" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="IMOT_1_comp" id="IR1" min=0 max=1 step=0.01></div>
@@ -85,7 +85,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR2" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR2" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="IMOT_2_comp" id="IR2" min=0 max=1 step=0.01></div>
@@ -107,7 +107,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR23 class=" form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR23 class=" form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="IMOT_3_comp" id="IR3" min=0 max=1 step=0.01></div>
@@ -129,7 +129,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR4" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR4" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="IMOT_4_comp" id="IR4" min=0 max=1 step=0.01></div>
@@ -151,7 +151,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR5" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR5" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_1_comp" id="IR5" min=0 max=1 step=0.01></div>
@@ -173,7 +173,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR6" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR6" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_2_comp" id="IR6" min=0 max=1 step=0.01></div>
@@ -195,7 +195,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR7" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR7" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_3_comp" id="IR7" min=0 max=1 step=0.01></div>
@@ -217,7 +217,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR8" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR8" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_4_comp" id="IR8" min=0 max=1 step=0.01></div>
@@ -239,7 +239,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR9" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR9" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_5_comp" id="IR9" min=0 max=1 step=0.01></div>
@@ -261,7 +261,7 @@
     </ul>
 
     <div class="container border rounded bg-light">
-        <label for="IR10" class="form-label" style="font-size: 16px;"><strong>Comment trouvez-vous cette affirmation ?</strong></label>
+        <label for="IR10" class="form-label" style="font-size: 16px;"><strong>Pour vous cette affirmation est :</strong></label>
         <div class="row align-items-center">
             <div class="col text-center" style="font-size: 15px;">Pas du tout claire</div>
             <div class="col-6"><input type="range" class="form-range" name="RIS_6_comp" id="IR10" min=0 max=1 step=0.01></div>
@@ -271,9 +271,9 @@
 
     <hr class="my-5">
 
-    <div class="form-floating mb-4">
+    <div class="container mb-4">
+        <p class="jspsych-survey-likert-statement"><strong>Vous pouvez préciser ci-dessous votre avis sur le questionnaire ou revenir sur des éléments problématiques pour votre compréhension</strong></p>
         <textarea class="form-control" placeholder="Vous pouvez écrire un commentaire ici" name="commentaire" id="comment" style="height: 100px"></textarea>
-        <label class="jspsych-survey-likert-statement" for="comment"><strong>Vous pouvez ici préciser votre avis sur le questionnaire</strong></label>
     </div>
 
 
