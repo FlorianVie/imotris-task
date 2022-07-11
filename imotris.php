@@ -1784,6 +1784,7 @@
             data.mail = data.response.mail;
             data.age = data.response.age;
             data.genre = data.response.genre;
+            data.date_acquisition = <?php echo time() ?>;
         },
         show_clickable_nav: true
     };
