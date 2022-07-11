@@ -1772,7 +1772,7 @@
 
 
 
-    var consent = {
+    var ending = {
         type: jsPsychSurveyHtmlForm,
         data: {
             part: "fin",
@@ -1782,10 +1782,12 @@
         button_label: "Envoyer les données à l'expérimentateur",
         on_finish: function(data) {
             data.mail = data.response.mail;
+            data.age = data.response.age;
+            data.genre = data.response.genre;
         },
         show_clickable_nav: true
     };
-    sequence.push(consent);
+    sequence.push(ending);
 
 
 
