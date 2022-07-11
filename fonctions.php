@@ -113,7 +113,7 @@ function getDataPretest($bdd)
 
 function getDataAll($bdd)
 {
-    $req = $bdd->prepare("SELECT participant, part, correct, rt, rt_mean, success, timeout, failed_images, failed_audio, failed_video, trial_type, trial_index, time_elapsed, internal_node_id, response, view_history, width, height, webaudio, browser, browser_version, mobile, os, fullscreen, vsync_rate, webcam, microphone, question_order, APTT_1, APTT_2, APTT_3, APTT_4, APTT_5, APTT_6, ATI_1, ATI_2, ATI_3, ATI_4, ATI_5, ATI_6, ATI_7, ATI_8, ATI_9, stimulus, salade, tomate, fromage, viande, oignon, poivron, burgerID, salade_nb, tomate_nb, oignon_nb, fromage_nb, viande_nb, poivron_nb, timeout_burger, IMOT_1, IMOT_2, IMOT_3, IMOT_4, RIS_1, RIS_2, RIS_3, RIS_4, RIS_5, RIS_6 FROM Data");
+    $req = $bdd->prepare("SELECT participant, part, correct, rt, rt_mean, success, timeout, failed_images, failed_audio, failed_video, trial_type, trial_index, time_elapsed, internal_node_id, response, view_history, width, height, webaudio, browser, browser_version, mobile, os, fullscreen, vsync_rate, webcam, microphone, question_order, APTT_1, APTT_2, APTT_3, APTT_4, APTT_5, APTT_6, ATI_1, ATI_2, ATI_3, ATI_4, ATI_5, ATI_6, ATI_7, ATI_8, ATI_9, stimulus, salade, tomate, fromage, viande, oignon, poivron, burgerID, salade_nb, tomate_nb, oignon_nb, fromage_nb, viande_nb, poivron_nb, timeout_burger, IMOT_1, IMOT_2, IMOT_3, IMOT_4, RIS_1, RIS_2, RIS_3, RIS_4, RIS_5, RIS_6 FROM data_campagne_1");
     $req->execute();
     $data = $req->fetchAll();
     $req->closeCursor();
