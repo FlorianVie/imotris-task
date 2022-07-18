@@ -1677,7 +1677,7 @@
             part: "recap",
         },
         pages: [
-            "<h3 class='mb-4'>Fin de la phase difficile</h3>" +
+            "<h3 class='mb-4'>Fin de la phase difficile avec assistance</h3>" +
             "<p><strong>Réussites</strong> : <span class='font-monospace' id='reuApp'>0</span></p>" +
             "<p><strong>Échecs</strong> : <span class='font-monospace' id='echApp'>0</span></p>" +
             "<p><strong>Temps moyen de réponse</strong> : <span class='font-monospace' id='rtApp'>0</span> secondes</p>" +
